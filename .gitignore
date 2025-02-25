@@ -1,0 +1,16 @@
+.idea
+[T]emp
+*.exe
+.vscode
+.vs
+*.vcxproj*
+*.sln
+build
+Debug
+_deps
+*.swp
+*.ilk
+*.pdb
+.fleet
+.cache
+.venv
