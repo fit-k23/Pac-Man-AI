@@ -20,7 +20,7 @@ clock = pygame.time.Clock()
 running = True
 
 # Map object
-maze = Map.parse("../maps/map_02.txt")
+maze = Map.parse("../asset/maps/map_02.txt")
 
 while running:
     # poll for events
