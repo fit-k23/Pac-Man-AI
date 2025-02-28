@@ -92,7 +92,8 @@ class PacMan:
                     self.update_dir()
                     return
 
-        # If can reach here, then there are either no requests or the last request can't be performed
+        # If can reach here, then there are either no requests or the last request can't be performed.
+        # So we keep moving current direction (if possible).
 
         # Check if can teleport
         if self.teleport(mp, self.dir, False):
