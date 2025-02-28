@@ -68,7 +68,7 @@ maze = Map.parse("../asset/maps/map_02.txt")
 
 # Get position of pacman and ghosts at first
 (pacman_pos, ghosts_pos) = maze.getCharacterPos()
-pacman = PacMan([15, 24])
+pacman = PacMan(pacman_pos)
 
 while running:
     pacman.delay += 1
