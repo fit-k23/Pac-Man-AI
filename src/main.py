@@ -3,8 +3,8 @@ from map import *
 from pacman import *
 
 # Screen, Block paramters
-BLOCK_W = 30
-BLOCK_H = 23
+BLOCK_W = 25
+BLOCK_H = 20
 SCREEN_WIDTH = BLOCK_W * 30
 SCREEN_HEIGHT = BLOCK_H * 33
 
@@ -68,7 +68,7 @@ maze = Map.parse("../asset/maps/map_02.txt")
 
 # Get position of pacman and ghosts at first
 (pacman_pos, ghosts_pos) = maze.getCharacterPos()
-pacman = PacMan(pacman_pos)
+pacman = PacMan([15, 24])
 
 while running:
     pacman.delay += 1
@@ -97,10 +97,9 @@ while running:
 
     # Draw pacman
     pacman.draw(screen, BLOCK_W, BLOCK_H)
-    # draw_ghost()
-    
+
     # slow movement
-    if pacman.delay == 10:
+    if pacman.delay == 2:
         pacman.move(maze.data)
         pacman.delay = 0
 
@@ -141,5 +140,5 @@ while running:
     pygame.display.flip()
 
     # dt = clock.tick(60) / 1000 # limits FPS to 60
-    clock.tick(90)
+    clock.tick(60)
 pygame.quit()
