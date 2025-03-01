@@ -17,3 +17,4 @@ _deps
 *.pyc
 *.tmp
 _pycache_
+.DS_Store
