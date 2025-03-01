@@ -27,7 +27,7 @@ running = True
 #                 turns[1] = True
 #         if director == 2:
 #             if int(maze.data[centery - check_distance// BLOCK_SIZE][(centerx) // BLOCK_SIZE]) < 3:
-#                 turns[2] = True   
+#                 turns[2] = True
 #         if director == 3:
 #             if int(maze.data[centery + check_distance // BLOCK_SIZE][(centerx + check_distance) // BLOCK_SIZE]) < 3:
 #                 turns[3] = True
@@ -36,7 +36,7 @@ running = True
 #             turns[0] = False
 #             turns[2] = False
 #             turns[3] = False
-#     return turns    
+#     return turns
 
 # ghost
 dl = 0
@@ -48,7 +48,7 @@ ghost_Y = 663
 collision_wall = [False, False, False, False]
 
 ghost_images.append(pygame.transform.scale(pygame.image.load(f'../pic/1.png'), (60, 60)))
-    
+
 def draw_ghost():
     #RIGHT
     if director == 0:
@@ -61,18 +61,18 @@ def draw_ghost():
         screen.blit(pygame.transform.rotate(ghost_images[0], 90), (ghost_X, ghost_Y))
     #DOWN
     if director == 3:
-        screen.blit(pygame.transform.rotate(ghost_images[0], 270), (ghost_X, ghost_Y))     
+        screen.blit(pygame.transform.rotate(ghost_images[0], 270), (ghost_X, ghost_Y))
 
 # Map object
-maze = Map.parse("../asset/maps/map_02.txt") 
+maze = Map.parse("../asset/maps/map_02.txt")
 
 # Get position of pacman and ghosts at first
-(pacman_pos, ghosts_pos) = maze.getCharacterPos()
-pacman = PacMan(pacman_pos)
+(pacman_pos, ghosts_pos) = maze.get_character_pos()
+pacman = Pacman(pacman_pos)
 
 while running:
     pacman.delay += 1
-    # poll for events   
+    # poll for events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -92,8 +92,8 @@ while running:
     screen.fill("black")
 
     # Draw map
-    # maze.drawGrid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
-    maze.drawMap(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
+    # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
+    maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
 
     # Draw pacman
     pacman.draw(screen, BLOCK_W, BLOCK_H)
@@ -116,9 +116,9 @@ while running:
     # if keys[pygame.K_a]:
     #     director = 1
     #     ghost_X -= 300 * dt
-    
+
     # collision_wall = check_position(ghost_X, ghost_Y)
-    
+
     # if director == 0 and collision_wall[0] == True:
     #     ghost_X += 300 * dt
     # if director == 1 and collision_wall[1] == True:
