@@ -15,6 +15,25 @@ class Pacman:
         self.last_request = -1
         self.veloc = 1 / 4
 
+        self.textures = []
+        self.__texture_index = -1
+        self.__last_update = pygame.time.get_ticks()
+        self.__animation_speed = 50 # 50ms
+
+    def load_textures(self, texture_list):
+        print(texture_list)
+        for texture in texture_list:
+            print(texture)
+            image = pygame.image.load(texture)
+            self.textures.append(pygame.transform.scale(image, (32, 32)))
+            self.__texture_index = 0
+
+    def update_animation(self):
+        now = pygame.time.get_ticks()
+        if now - self.__last_update > self.__animation_speed:
+            self.__last_update = now
+            self.__texture_index = (self.__texture_index + 1) % len(self.textures)
+
     # Check if a block can be reached by characters
     def can_go(self, check_pos, mp) -> bool:
         # TODO: update teleport if out of map
@@ -114,5 +133,15 @@ class Pacman:
 
     # Draw pacman
     def draw(self, screen, block_width, block_height):
-        rect = pygame.Rect(self.pos[0] * block_width, self.pos[1] * block_height, block_width, block_height)
-        pygame.draw.rect(screen, YELLOW, rect)
+        if self.__texture_index == -1:
+            return
+        self.update_animation()
+        image = self.textures[self.__texture_index]
+        if self.dir == 0:
+            image = pygame.transform.rotate(image, 90)
+        elif self.dir == 1:
+            image = pygame.transform.rotate(image, -90)
+        elif self.dir == 2:
+            image = pygame.transform.flip(image, True, False)  # Flip horizontally
+
+        screen.blit(image, ((self.pos[0] - 0.25) * block_width, (self.pos[1] - 0.25) * block_height))
