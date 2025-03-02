@@ -88,27 +88,26 @@ class Pacman:
             # Check if pacman can teleport
             if self.teleport(mp, self.last_request, True):
                 return
-            match self.last_request:
-                case 0:
-                    if self.can_go([self.pos[0], math.floor(self.pos[1] - self.veloc)], mp) and self.pos[0] % 1.0 == 0:
-                        self.pos[1] -= self.veloc
-                        self.update_dir()
-                        return
-                case 1:
-                    if self.can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.veloc)], mp) and self.pos[0] % 1.0 == 0:
-                        self.pos[1] += self.veloc
-                        self.update_dir()
-                        return
-                case 2:
-                    if self.can_go([math.floor(self.pos[0] - self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
-                        self.pos[0] -= self.veloc
-                        self.update_dir()
-                        return
-                case 3:
-                    if self.can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
-                        self.pos[0] += self.veloc
-                        self.update_dir()
-                        return
+            if self.last_request == 0:
+                if self.can_go([self.pos[0], math.floor(self.pos[1] - self.veloc)], mp) and self.pos[0] % 1.0 == 0:
+                    self.pos[1] -= self.veloc
+                    self.update_dir()
+                    return
+            elif self.last_request == 1:
+                if self.can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.veloc)], mp) and self.pos[0] % 1.0 == 0:
+                    self.pos[1] += self.veloc
+                    self.update_dir()
+                    return
+            elif self.last_request == 2:
+                if self.can_go([math.floor(self.pos[0] - self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
+                    self.pos[0] -= self.veloc
+                    self.update_dir()
+                    return
+            elif self.last_request == 3:
+                if self.can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
+                    self.pos[0] += self.veloc
+                    self.update_dir()
+                    return
 
         # If the code can reach here, then there are either no requests or the last request can't be performed.
         # So we keep moving current direction (if possible).
@@ -117,20 +116,19 @@ class Pacman:
         if self.teleport(mp, self.dir, False):
             return
 
-        match self.dir:
-            case 0:
-                if self.can_go([self.pos[0], math.floor(self.pos[1] - self.veloc)], mp) and self.pos[0] % 1.0 == 0:
-                    self.pos[1] -= self.veloc
-            case 1:
-                if self.can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.veloc)], mp) and self.pos[0] % 1.0 == 0:
-                    self.pos[1] += self.veloc
-            case 2:
-                if self.can_go([math.floor(self.pos[0] - self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
-                    self.pos[0] -= self.veloc
-            case 3:
-                if self.can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
-                    self.pos[0] += self.veloc
-                    
+        if self.dir == 0:
+            if self.can_go([self.pos[0], math.floor(self.pos[1] - self.veloc)], mp) and self.pos[0] % 1.0 == 0:
+                self.pos[1] -= self.veloc
+        elif self.dir == 1:
+            if self.can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.veloc)], mp) and self.pos[0] % 1.0 == 0:
+                self.pos[1] += self.veloc
+        elif self.dir == 2:
+            if self.can_go([math.floor(self.pos[0] - self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
+                self.pos[0] -= self.veloc
+        elif self.dir == 3:
+            if self.can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
+                self.pos[0] += self.veloc
+                
         mp.delete_food(food_pos, self.pos[1], self.pos[0])
 
     # Draw pacman
