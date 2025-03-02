@@ -65,8 +65,12 @@ def draw_ghost():
 # Map object
 maze = Map.parse("../asset/maps/map_02.txt")
 
+
+
 # Get position of pacman and ghosts at first
+# Get position of food at first
 (pacman_pos, ghosts_pos) = maze.get_character_pos()
+food_pos = maze.get_food_pos() 
 pacman = Pacman(pacman_pos)
 
 pacman.load_textures([f"../asset/pacman/pacman_{i}.png" for i in range(1, 9)])
@@ -95,13 +99,14 @@ while running:
     # Draw map
     # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
     maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
+    maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 
     # Draw pacman
     pacman.draw(screen, BLOCK_W, BLOCK_H)
 
     # slow movement
     if pacman.delay == 2:
-        pacman.move(maze.data)
+        pacman.move(maze, food_pos)
         pacman.delay = 0
 
     # keys = pygame.key.get_pressed()

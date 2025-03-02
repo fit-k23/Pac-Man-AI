@@ -10,6 +10,7 @@ THICKNESS = 4
 class Map:
     data = []
     @staticmethod
+    
     def parse(file_path: str):
         _map = Map()
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -34,6 +35,15 @@ class Map:
                 elif self.data[i][j] == 'g':
                     ghosts.append((i, j))
         return pacman, ghosts
+    
+    def get_food_pos(self):
+        food = []
+        for i in range(len(self.data)):
+            for j in range(len(self.data[i])):
+                if self.data[i][j] == '1':
+                    food.append((i, j))
+        
+        return food
 
     def draw_map(self, screen, screen_width, screen_height, block_width, block_height):
         off_x = 1
@@ -66,3 +76,23 @@ class Map:
                         start_pos = (x, y + block_height / 2)
                         end_pos = (x + block_width, y + block_height / 2)
                         pygame.draw.line(screen, BLUE, start_pos, end_pos, THICKNESS)
+                        
+                                        
+    def draw_food(self, screen, block_width, block_height, food_pos):
+        for (col, row) in food_pos:
+            x = row * block_width
+            y = col * block_height
+            centerPos = (x + block_width / 2, y + block_height / 2)
+            radius = block_width / 4
+            pygame.draw.circle(screen, YELLOW, centerPos, radius)  
+            
+    def delete_food(self, food_pos, x, y):
+        if (x, y) in food_pos:
+            food_pos.remove((x, y))
+        
+
+
+        
+                        
+                
+                        

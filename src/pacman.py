@@ -39,7 +39,7 @@ class Pacman:
         # TODO: update teleport if out of map
         if int(check_pos[0]) < 0 or int(check_pos[0]) >= 30 or int(check_pos[1]) < 0 or int(check_pos[1]) >= 33:
             return False
-        if '3' <= mp[int(check_pos[1])][int(check_pos[0])] <= '8':
+        if '3' <= mp.data[int(check_pos[1])][int(check_pos[0])] <= '8':
             return False
         return True
 
@@ -81,7 +81,7 @@ class Pacman:
         return False
 
     # Move the pacman along blocks
-    def move(self, mp):
+    def move(self, mp, food_pos):
         offset_check_turn = 0.9
         # If there are keyboard pressed (W, S, A, D)
         if self.last_request != -1:
@@ -130,6 +130,8 @@ class Pacman:
             case 3:
                 if self.can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
                     self.pos[0] += self.veloc
+                    
+        mp.delete_food(food_pos, self.pos[1], self.pos[0])
 
     # Draw pacman
     def draw(self, screen, block_width, block_height):
