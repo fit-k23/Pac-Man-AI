@@ -14,29 +14,6 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
 
-# def check_position(centerx, centery):
-#     turns = [False, False, False, False]
-#     check_distance = 15 #the least possible distance from the person to the wall
-#     if centerx // 30 < 29:
-#         if director == 0:
-#             if int(maze.data[centery // BLOCK_SIZE][(centerx + check_distance) // BLOCK_SIZE]) < 3:
-#                 turns[0] = True
-#         if director == 1:
-#             if int(maze.data[centery // BLOCK_SIZE][(centerx - check_distance) // BLOCK_SIZE]) < 3:
-#                 turns[1] = True
-#         if director == 2:
-#             if int(maze.data[centery - check_distance// BLOCK_SIZE][(centerx) // BLOCK_SIZE]) < 3:
-#                 turns[2] = True
-#         if director == 3:
-#             if int(maze.data[centery + check_distance // BLOCK_SIZE][(centerx + check_distance) // BLOCK_SIZE]) < 3:
-#                 turns[3] = True
-#         else:
-#             turns[1] = False
-#             turns[0] = False
-#             turns[2] = False
-#             turns[3] = False
-#     return turns
-
 # ghost
 dl = 0
 director = 0
@@ -65,10 +42,7 @@ def draw_ghost():
 # Map object
 maze = Map.parse("../asset/maps/map_02.txt")
 
-
-
-# Get position of pacman and ghosts at first
-# Get position of food at first
+# Get position of pacman, ghosts, and food at first
 (pacman_pos, ghosts_pos) = maze.get_character_pos()
 food_pos = maze.get_food_pos() 
 pacman = Pacman(pacman_pos)
@@ -109,42 +83,8 @@ while running:
         pacman.move(maze, food_pos)
         pacman.delay = 0
 
-    # keys = pygame.key.get_pressed()
-    # if keys[pygame.K_w]:
-    #     director = 2
-    #     ghost_Y -= 300 * dt
-    # if keys[pygame.K_s]:
-    #     director = 3
-    #     ghost_Y += 300 * dt
-    # if keys[pygame.K_d]:
-    #     director = 0
-    #     ghost_X += 300 * dt
-    # if keys[pygame.K_a]:
-    #     director = 1
-    #     ghost_X -= 300 * dt
-
-    # collision_wall = check_position(ghost_X, ghost_Y)
-
-    # if director == 0 and collision_wall[0] == True:
-    #     ghost_X += 300 * dt
-    # if director == 1 and collision_wall[1] == True:
-    #     ghost_X -= 300 * dt
-    # if director == 2 and collision_wall[2] == True:
-    #     ghost_Y -= 300 * dt
-    # if director == 3 and collision_wall[3] == True:
-    #     ghost_Y += 300 * dt
-
-    # if ghost_X > 900:
-    #     ghost_X = 0
-    # if ghost_X < 0:
-    #     ghost_X = 900
-    # if ghost_Y > 990:
-    #     ghost_Y = 0
-    # if ghost_Y < 0:
-    #     ghost_Y = 990
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    # dt = clock.tick(60) / 1000 # limits FPS to 60
     clock.tick(60)
 pygame.quit()
