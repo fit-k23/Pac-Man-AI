@@ -1,6 +1,10 @@
 import pygame
 from map import *
 from pacman import *
+from ghost import *
+from algo import *
+
+
 
 # Screen, Block parameters
 BLOCK_W = 25
@@ -25,20 +29,6 @@ collision_wall = [False, False, False, False]
 
 # ghost_images.append(pygame.transform.scale(pygame.image.load(f'../pic/1.png'), (60, 60)))
 
-def draw_ghost():
-    #RIGHT
-    if director == 0:
-        screen.blit(ghost_images[0], (ghost_X, ghost_Y))
-    if director == 1:
-    #LEFT
-        screen.blit(pygame.transform.flip(ghost_images[0], True, False), (ghost_X, ghost_Y))
-    if director == 2:
-    #TOP
-        screen.blit(pygame.transform.rotate(ghost_images[0], 90), (ghost_X, ghost_Y))
-    #DOWN
-    if director == 3:
-        screen.blit(pygame.transform.rotate(ghost_images[0], 270), (ghost_X, ghost_Y))
-
 # Map object
 maze = Map.parse("../asset/maps/map_02.txt")
 
@@ -46,6 +36,22 @@ maze = Map.parse("../asset/maps/map_02.txt")
 (pacman_pos, ghosts_pos) = maze.get_character_pos()
 food_pos = maze.get_food_pos() 
 pacman = Pacman(pacman_pos)
+pink_ghost = Pinky(ghosts_pos[1])
+blue_ghost = Inky(ghosts_pos[2])
+yellow_ghost = Clyde(ghosts_pos[0])
+red_ghost = Blinky(ghosts_pos[3])
+
+search = SearchProblem(pink_ghost, pacman, maze)
+
+print(search.getStartState())
+print(pacman.pos)
+print("++++++")
+
+
+solution = bfs(search)
+for pos in solution:
+    print(pos)
+
 
 pacman.load_textures([f"../asset/pacman/pacman_{i}.png" for i in range(1, 9)])
 
@@ -77,6 +83,11 @@ while running:
 
     # Draw pacman
     pacman.draw(screen, BLOCK_W, BLOCK_H)
+    pink_ghost.draw(screen, BLOCK_W, BLOCK_H)
+    red_ghost.draw(screen, BLOCK_W, BLOCK_H)
+    yellow_ghost.draw(screen, BLOCK_W, BLOCK_H)
+    blue_ghost.draw(screen, BLOCK_W, BLOCK_H)
+    
 
     # slow movement
     if pacman.delay == 2:

@@ -25,14 +25,14 @@ class Map:
                 pygame.draw.rect(screen, WHITE, rect, 1)
 
     def get_character_pos(self):
-        pacman = [0, 0]
+        pacman = (15, 24)
         ghosts = []
         for i in range(len(self.data)):
             for j in range(len(self.data[i])):
                 if self.data[i][j] == 'p':
-                    pacman = [j, i]
+                    pacman = (j, i)
                 elif self.data[i][j] == 'g':
-                    ghosts.append((i, j))
+                    ghosts.append((j, i))
         return pacman, ghosts
     
     def get_food_pos(self):
