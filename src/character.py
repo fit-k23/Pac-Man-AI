@@ -1,130 +1,89 @@
-from map import*
+from map import *
+from util import *
+from defs import *
 
+# This is a parent class of pacman and ghosts.
+# The move function of pacman and ghosts are different so it is defined in child class.
 class Characters:
-    def __init__(self, pos=(0, 0), veloc=1/4):
-        self.pos = pos  # Vị trí trên bản đồ (dùng list để có thể thay đổi)
-        self.dir = -1  # Hướng di chuyển hiện tại
-        self.delay = 0  # Độ trễ di chuyển
-        self.last_request = -1  # Lần cuối yêu cầu đổi hướng
-        self.veloc = veloc  # Vận tốc di chuyển
+    pos = [0, 0] # positon on grid (array type []), use (x, y) coordinates in pygame
+    prev_pos = [-1, -1] # previous position of character (-1 indicates character has not moved)
+    dir = -1 # current moving direction
+    delay = 0 # delay for slow movement
+    last_request = -1 # save the last request to change direction
+    veloc = 1/4 # velocity 
+
+    # Constructor
+    def __init__(self, _pos):
+        self.pos = _pos  
+        self.prev_pos = [-1, -1]
+        self.dir = -1
+        self.delay = 0  
+        self.last_request = -1 
+        self.veloc = 1/4
+
         self.textures = []
-        # Thuộc tính riêng tư (private)
         self.__texture_index = -1
         self.__last_update = pygame.time.get_ticks()
-        self.__animation_speed = 50  # 50ms mỗi frame animation
-    
+        self.__animation_speed = 50  
     
     # Update direction according to last request
     def update_dir(self):
         self.dir = self.last_request
         self.last_request = -1
-        
+    
+    # Load the textures
     def load_textures(self, texture_list):
-        print(texture_list)
+        # print(texture_list)
         for texture in texture_list:
-            print(texture)
+            # print(texture)
             image = pygame.image.load(texture)
             self.textures.append(pygame.transform.scale(image, (32, 32)))
             self.__texture_index = 0
-            
+
+    # Update animation            
     def update_animation(self):
         now = pygame.time.get_ticks()
         if now - self.__last_update > self.__animation_speed:
             self.__last_update = now
             self.__texture_index = (self.__texture_index + 1) % len(self.textures)
-            
-    # Check if a block can be reached by characters
-    def can_go(self, check_pos, mp) -> bool:
-        # TODO: update teleport if out of map
-        if int(check_pos[0]) < 0 or int(check_pos[0]) >= 30 or int(check_pos[1]) < 0 or int(check_pos[1]) >= 33:
-            return False
-        if '3' <= mp.data[int(check_pos[1])][int(check_pos[0])] <= '8':
-            return False
-        return True
-
-    # Check if pacman can teleport through map
+        
+    # Check if character can teleport through map
     def teleport(self, mp, d, is_upd):
         if d == 0:
             if self.pos[0] % 1.0 == 0 and self.pos[1] == 0:
-                if self.can_go([self.pos[0], 32], mp):
+                if can_go([self.pos[0], 32], mp):
+                    self.prev_pos = self.pos
                     self.pos[1] = 32
                     if is_upd:
                         self.update_dir()
                     return True
         elif d == 1:
             if self.pos[0] % 1.0 == 0 and self.pos[1] == 32:
-                if self.can_go([self.pos[0], 0], mp):
+                if can_go([self.pos[0], 0], mp):
+                    self.prev_pos = self.pos
                     self.pos[1] = 0
                     if is_upd:
                         self.update_dir()
                     return True
         elif d == 2:
             if self.pos[1] % 1.0 == 0 and self.pos[0] == 0:
-                if self.can_go([29, self.pos[1]], mp):
+                if can_go([29, self.pos[1]], mp):
+                    self.prev_pos = self.pos
                     self.pos[0] = 29
                     if is_upd:
                         self.update_dir()
                     return True
         elif d == 3:
             if self.pos[1] % 1.0 == 0 and self.pos[0] == 29:
-                if self.can_go([0, self.pos[1]], mp):
+                if can_go([0, self.pos[1]], mp):
+                    self.prev_pos = self.pos
                     self.pos[0] = 0
                     if is_upd:
                         self.update_dir()
                     return True
-        return False
+        return False   
 
-    # Move the pacman along blocks
-    def move(self, mp):
-        offset_check_turn = 0.9
-        # If there are keyboard pressed (W, S, A, D)
-        if self.last_request != -1:
-            # Check if pacman can teleport
-            if self.teleport(mp, self.last_request, True):
-                return
-            if self.last_request == 0:
-                if self.can_go([self.pos[0], math.floor(self.pos[1] - self.veloc)], mp) and self.pos[0] % 1.0 == 0:
-                    self.pos[1] -= self.veloc
-                    self.update_dir()
-                    return
-            elif self.last_request == 1:
-                if self.can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.veloc)], mp) and self.pos[0] % 1.0 == 0:
-                    self.pos[1] += self.veloc
-                    self.update_dir()
-                    return
-            elif self.last_request == 2:
-                if self.can_go([math.floor(self.pos[0] - self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
-                    self.pos[0] -= self.veloc
-                    self.update_dir()
-                    return
-            elif self.last_request == 3:
-                if self.can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
-                    self.pos[0] += self.veloc
-                    self.update_dir()
-                    return
-
-        # If the code can reach here, then there are either no requests or the last request can't be performed.
-        # So we keep moving current direction (if possible).
-
-        # Check if pacman can teleport
-        if self.teleport(mp, self.dir, False):
-            return
-
-        if self.dir == 0:
-            if self.can_go([self.pos[0], math.floor(self.pos[1] - self.veloc)], mp) and self.pos[0] % 1.0 == 0:
-                self.pos[1] -= self.veloc
-        elif self.dir == 1:
-            if self.can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.veloc)], mp) and self.pos[0] % 1.0 == 0:
-                self.pos[1] += self.veloc
-        elif self.dir == 2:
-            if self.can_go([math.floor(self.pos[0] - self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
-                self.pos[0] -= self.veloc
-        elif self.dir == 3:
-            if self.can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
-                self.pos[0] += self.veloc
-            
-
-    # Draw pacman
+    # Draw character
     def draw(self, screen, block_width, block_height):
         if self.__texture_index == -1:
             return

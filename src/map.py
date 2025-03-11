@@ -2,7 +2,7 @@ from unittest import case
 
 import pygame
 import math
-from color import *
+from defs import *
 
 # THICKNESS
 THICKNESS = 4
@@ -25,15 +25,15 @@ class Map:
                 pygame.draw.rect(screen, WHITE, rect, 1)
 
     def get_character_pos(self):
-        pacman = (15, 24)
+        pacman = [0, 0]
         ghosts = []
         for i in range(len(self.data)):
             for j in range(len(self.data[i])):
                 if self.data[i][j] == 'p':
-                    pacman = (j, i)
+                    pacman = [j, i]
                 elif self.data[i][j] == 'g':
-                    ghosts.append((j, i))
-        return pacman, ghosts
+                    ghosts.append([j, i])
+        return (pacman, ghosts)
     
     def get_food_pos(self):
         food = []

@@ -1,37 +1,39 @@
-import util
+from util import *
+import queue
+from queue import PriorityQueue
+from defs import *
 
+# Infinity value
+INF = 99999
 
-dx = [0, -1, 1, 0]
-dy = [1, 0, 0, -1]
-class SearchProblem:
-    def __init__(self, ghost, pacman, mp):
-        self.mp = mp
-        self.startState = ghost
-        self.goalState = pacman
-        
-    def getStartState(self):
-        return self.startState.pos
+# up, down, left, right
+dx = [0, 0, -1, 1]
+dy = [-1, 1, 0, 0]
+
+# algo_num: [0->bfs], [1->dfs], [2->ucs], [3->A*]
+class Search:
+    # Constructor
+    def __init__(self, _mp, _ghost, _pacman):
+        self.mp = _mp
+        self.ghost = _ghost
+        self.pacman = _pacman
+
+    # Get best successor with current problem state
+    # id: id of current ghost
+    # ghosts_pos: positions of all ghosts
+    @staticmethod
+    def get_optimal_successor(algo_id, mp, ghosts_pos, id, pacman_pos):
+        match algo_id:
+            case 0:
+                return bfs(mp, ghosts_pos, id, pacman_pos)
+            case 1:
+                return dfs(mp, ghosts_pos, id, pacman_pos)
+            case 2:
+                return ucs(mp, ghosts_pos, id, pacman_pos)
+            case 3:
+                return astar(mp, ghosts_pos, id, pacman_pos)
     
-    def isGoalState(self, state):
-        if state == self.goalState.pos:
-            return True
-        return False
-    
-    def getSuccesor(self, state):
-        successes = []
-        for i in range(0, 4):
-            x_new = state[0] + dx[i]
-            y_new = state[1] + dy[i]
-            if self.startState.can_go((x_new, y_new), self.mp):
-                successes.append((x_new, y_new))                                                     
-        return successes
-    
-    def getCostOfAction(self, action):
-        return None
-
-
-
-def bfs(problem):
+def bfs(mp, ghosts_pos, id, pacman_pos):
     # node = problem.getStartState()
     # frontier = util.queue()
     solution = []
@@ -68,15 +70,68 @@ def bfs(problem):
     #     node_sol = parent[node_sol]
     
     return solution
-                  
 
-
-
-def dfs(problem):
+def dfs(mp, ghosts_pos, id, pacman_pos):
     return None
 
-def ucs(problem):
-    return None
+def ucs(mp, ghosts_pos, id, pacman_pos):
+    # Initialize priority queue and dist array
+    pq = PriorityQueue()
+    dist = []
+    trace = []
+    for i in range(30):
+        col = []
+        trace_col = []
+        for j in range(33):
+            col.append(INF)
+            trace_col.append([-1, -1])
+        dist.append(col)
+        trace.append(trace_col)
 
-def astar(problem):
+    # Push the initial position to queue
+    pq.put( ( 0, [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])] ) )
+    dist[int(ghosts_pos[id][0])][int(ghosts_pos[id][1])] = 0
+    while pq:
+        (cur_dist, cur_pos) = pq.get()
+        
+        # Get rid of redundant path
+        if cur_dist != dist[cur_pos[0]][cur_pos[1]]:
+            continue
+
+        # Expand goal position -> end
+        if cur_pos == pacman_pos:
+            break
+
+        # Check 4 successors
+        for i in range(0, 4):
+            new_pos = [cur_pos[0] + dx[i], cur_pos[1] + dy[i]]
+            if can_go(new_pos, mp) == False:
+                continue
+            if dist[new_pos[0]][new_pos[1]] > cur_dist + 1:
+                dist[new_pos[0]][new_pos[1]] = cur_dist + 1
+                pq.put ( ( dist[new_pos[0]][new_pos[1]], new_pos ))
+                trace[new_pos[0]][new_pos[1]] = cur_pos
+
+    # Trace back to find optimal successor
+    succ = []
+    temp = [int(pacman_pos[0]), int(pacman_pos[1])]
+    while temp != ghosts_pos[id]:
+        succ = temp
+        new_temp = trace[temp[0]][temp[1]]
+        temp = new_temp
+    
+    occupied = False
+    for i in range(0, 4): 
+        if ghosts_pos[i] == succ:
+            occupied = True
+
+    if occupied:
+        for i in range(0, 4):
+            new_pos = [ghosts_pos[id][0] + dx[i], ghosts_pos[id][1] + dy[i]]
+            if can_go(new_pos, mp) and new_pos != succ:
+                return new_pos
+        return []
+    return succ
+
+def astar(mp, ghosts_pos, id, pacman_pos):
     return None
