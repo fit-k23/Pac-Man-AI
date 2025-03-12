@@ -53,9 +53,15 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], di
     print(f"visited: {visited}")
 
     current: list[int] = [int(pacman_pos[0]), int(pacman_pos[1])]
+
+    trace_path: list
     while current != start:
+        trace_path.append(current)
         _next = visited[current[0]][current[1]]
-        if _next == start:
-            print(f"Found path {current}. Source: {_next}")
-            return current
+        # if _next == start:
+        #     print(f"Found path {current}. Source: {_next}")
+        #     return current
         current = _next
+
+    trace_path.reverse()
+    return trace_path # return path
