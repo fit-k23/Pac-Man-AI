@@ -1,4 +1,6 @@
-from algo.search import *
+from queue import PriorityQueue
+from util import *
+from defs import *
 
 def astar(mp, ghosts_pos, id, pacman_pos):
     pq = PriorityQueue()  

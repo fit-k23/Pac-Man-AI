@@ -1,5 +1,3 @@
-from algo.search import *
-
 def bfs(mp, ghosts_pos, id, pacman_pos):
     # node = problem.getStartState()
     # frontier = util.queue()

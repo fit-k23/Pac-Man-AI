@@ -1,4 +1,6 @@
-from algo.search import *
+from queue import PriorityQueue
+from util import *
+from defs import *
 
 def ucs(mp, ghosts_pos, id, pacman_pos):
     # Initialize priority queue and dist array
@@ -31,7 +33,7 @@ def ucs(mp, ghosts_pos, id, pacman_pos):
         # Check 4 successors
         for i in range(0, 4):
             new_pos = [cur_pos[0] + dx[i], cur_pos[1] + dy[i]]
-            if can_go(new_pos, mp) == False:
+            if not can_go(new_pos, mp):
                 continue
             if dist[new_pos[0]][new_pos[1]] > cur_dist + 1:
                 dist[new_pos[0]][new_pos[1]] = cur_dist + 1
