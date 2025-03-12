@@ -48,6 +48,9 @@ ghosts[3].load_textures([f"../asset/ghost/{i}.png" for i in range(2, 3)])
 while running:
     pacman.delay += 1
     ghosts[0].delay += 1
+    ghosts[3].delay += 1
+    
+    
     for i in range(0, 4):
         ghosts_pos[i] = ghosts[i].pos
     # poll for events
@@ -86,6 +89,10 @@ while running:
     if ghosts[0].delay == 2:
         ghosts[0].move(maze, ghosts_pos, pacman.pos)
         ghosts[0].delay = 0
+    if ghosts[3].delay == 2:
+        ghosts[3].move(maze, ghosts_pos, pacman.pos)
+        ghosts[3].delay = 0
+    
     # flip() the display to put your work on screen
     pygame.display.flip()
 
