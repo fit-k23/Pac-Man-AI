@@ -9,6 +9,12 @@ MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 PURPLE = (255, 0, 255)
 
+# Screen, Block parameters
+SCREEN_WIDTH: int = 750
+SCREEN_HEIGHT: int = 660
+BLOCK_W: int = SCREEN_WIDTH // 30
+BLOCK_H: int = SCREEN_HEIGHT // 33
+
 # GHOST_ID
 CLYDE = 0 # yellow ghost -> UCS-2
 PINKY = 1 # pink ghost -> DFS-1

@@ -5,13 +5,6 @@ from ghost import *
 from algo import *
 from defs import *
 
-# Screen, Block parameters
-
-BLOCK_W = 25
-BLOCK_H = 20
-SCREEN_WIDTH = BLOCK_W * 30
-SCREEN_HEIGHT = BLOCK_H * 33
-
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
