@@ -1,7 +1,7 @@
 from enum import Enum
 from character import *
 from pacman import *
-from algo import *
+from algo.search import *
 from defs import *
 import util
 import math

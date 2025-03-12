@@ -20,3 +20,10 @@ PINKY_ALGO = 1
 INKY_ALGO = 0
 CLYDE_ALGO = 2
 BLINKY_ALGO = 3
+
+# Infinity value
+INF = 99999
+
+# up, down, left, right
+dx = [0, 0, -1, 1]
+dy = [-1, 1, 0, 0]
