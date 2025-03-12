@@ -25,5 +25,6 @@ BLINKY_ALGO = 3
 INF = 99999
 
 # up, down, left, right
+# 0 1 2 3
 dx = [0, 0, -1, 1]
 dy = [-1, 1, 0, 0]

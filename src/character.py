@@ -1,6 +1,6 @@
 from map import *
 from util import *
-from defs import *
+
 
 # This is a parent class of pacman and ghosts.
 # The move function of pacman and ghosts are different so it is defined in child class.
@@ -10,7 +10,7 @@ class Characters:
     dir = -1 # current moving direction
     delay = 0 # delay for slow movement
     last_request = -1 # save the last request to change direction
-    veloc = 1/4 # velocity 
+    velocity = 1 / 4 # velocity
 
     # Constructor
     def __init__(self, _pos):
@@ -19,7 +19,7 @@ class Characters:
         self.dir = -1
         self.delay = 0  
         self.last_request = -1 
-        self.veloc = 1/4
+        self.velocity = 1 / 4
 
         self.textures = []
         self.__texture_index = -1

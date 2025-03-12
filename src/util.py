@@ -6,12 +6,12 @@ import random
 def can_go(check_pos, mp) -> bool:
     if int(check_pos[0]) < 0 or int(check_pos[0]) >= 30 or int(check_pos[1]) < 0 or int(check_pos[1]) >= 33:
         return False
-    if '3' <= mp.data[int(check_pos[1])][int(check_pos[0])] <= '8':
+    if '3' <= mp.data[int(check_pos[1])][int(check_pos[0])] <= '8': # wall
         return False
     return True
 
 # Chosen heuristic function is Manhattan
-# Even though Manhattan and Euclide distance are both consistent, Manhattan dominates Euclide
+# Even though Manhattan and Euclidean distance are both consistent, Manhattan dominates Euclidean
 def get_heuristic(pos, goal_pos):
     return abs(pos[0] - goal_pos[0]) + abs(pos[1] - goal_pos[1])
 
@@ -28,7 +28,7 @@ class stack:
     def isEmpty(self):
         return len(self.list) == 0
 
-class queue: 
+class queue:
     def __init__(self):
         self.list = []
         

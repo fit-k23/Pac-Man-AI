@@ -6,6 +6,7 @@ from algo import *
 from defs import *
 
 # Screen, Block parameters
+
 BLOCK_W = 25
 BLOCK_H = 20
 SCREEN_WIDTH = BLOCK_W * 30
@@ -16,17 +17,6 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
-
-# ghost
-# dl = 0
-# director = 0
-
-# ghost_images = []
-# ghost_X = 450
-# ghost_Y = 663
-# collision_wall = [False, False, False, False]
-
-# ghost_images.append(pygame.transform.scale(pygame.image.load(f'../pic/1.png'), (60, 60)))
 
 # Map object
 maze = Map.parse("../asset/maps/map_02.txt")
@@ -48,9 +38,9 @@ ghosts[3].load_textures([f"../asset/ghost/{i}.png" for i in range(2, 3)])
 while running:
     pacman.delay += 1
     ghosts[0].delay += 1
+    ghosts[1].delay += 1
     ghosts[3].delay += 1
-    
-    
+
     for i in range(0, 4):
         ghosts_pos[i] = ghosts[i].pos
     # poll for events
@@ -89,10 +79,13 @@ while running:
     if ghosts[0].delay == 2:
         ghosts[0].move(maze, ghosts_pos, pacman.pos)
         ghosts[0].delay = 0
+    if ghosts[1].delay == 2:
+        ghosts[1].move(maze, ghosts_pos, pacman.pos)
+        ghosts[1].delay = 0
     if ghosts[3].delay == 2:
         ghosts[3].move(maze, ghosts_pos, pacman.pos)
         ghosts[3].delay = 0
-    
+
     # flip() the display to put your work on screen
     pygame.display.flip()
 

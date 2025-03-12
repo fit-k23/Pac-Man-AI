@@ -13,27 +13,27 @@ class Pacman(Characters):
             if self.teleport(mp, self.last_request, True):
                 return
             if self.last_request == 0:
-                if can_go([self.pos[0], math.floor(self.pos[1] - self.veloc)], mp) and self.pos[0] % 1.0 == 0:
+                if can_go([self.pos[0], math.floor(self.pos[1] - self.velocity)], mp) and self.pos[0] % 1.0 == 0:
                     self.prev_pos = self.pos
-                    self.pos[1] -= self.veloc
+                    self.pos[1] -= self.velocity
                     self.update_dir()
                     return
             elif self.last_request == 1:
-                if can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.veloc)], mp) and self.pos[0] % 1.0 == 0:
+                if can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.velocity)], mp) and self.pos[0] % 1.0 == 0:
                     self.prev_pos = self.pos
-                    self.pos[1] += self.veloc
+                    self.pos[1] += self.velocity
                     self.update_dir()
                     return
             elif self.last_request == 2:
-                if can_go([math.floor(self.pos[0] - self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
+                if can_go([math.floor(self.pos[0] - self.velocity), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
                     self.prev_pos = self.pos
-                    self.pos[0] -= self.veloc
+                    self.pos[0] -= self.velocity
                     self.update_dir()
                     return
             elif self.last_request == 3:
-                if can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
+                if can_go([math.floor(self.pos[0] + offset_check_turn + self.velocity), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
                     self.prev_pos = self.pos
-                    self.pos[0] += self.veloc
+                    self.pos[0] += self.velocity
                     self.update_dir()
                     return
 
@@ -45,21 +45,21 @@ class Pacman(Characters):
             return
 
         if self.dir == 0:
-            if can_go([self.pos[0], math.floor(self.pos[1] - self.veloc)], mp) and self.pos[0] % 1.0 == 0:
+            if can_go([self.pos[0], math.floor(self.pos[1] - self.velocity)], mp) and self.pos[0] % 1.0 == 0:
                 self.prev_pos = self.pos
-                self.pos[1] -= self.veloc
+                self.pos[1] -= self.velocity
         elif self.dir == 1:
-            if can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.veloc)], mp) and self.pos[0] % 1.0 == 0:
+            if can_go([self.pos[0], math.floor(self.pos[1] + offset_check_turn + self.velocity)], mp) and self.pos[0] % 1.0 == 0:
                 self.prev_pos = self.pos
-                self.pos[1] += self.veloc
+                self.pos[1] += self.velocity
         elif self.dir == 2:
-            if can_go([math.floor(self.pos[0] - self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
+            if can_go([math.floor(self.pos[0] - self.velocity), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
                 self.prev_pos = self.pos
-                self.pos[0] -= self.veloc
+                self.pos[0] -= self.velocity
         elif self.dir == 3:
-            if can_go([math.floor(self.pos[0] + offset_check_turn + self.veloc), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
+            if can_go([math.floor(self.pos[0] + offset_check_turn + self.velocity), self.pos[1]], mp) and self.pos[1] % 1.0 == 0:
                 self.prev_pos = self.pos
-                self.pos[0] += self.veloc
+                self.pos[0] += self.velocity
 
-        mp.delete_food(food_pos, self.pos[1], self.pos[0]) 
+        mp.erase_food(food_pos, self.pos[1], self.pos[0])
         
