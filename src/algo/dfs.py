@@ -2,8 +2,10 @@ from map import Map
 from util import *
 import random
 
-def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], forbid = []) -> list[int]:
+def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], forbid=None) -> list[int]:
     # return ([], 0)
+    if forbid is None:
+        forbid = []
     start: list[int] = [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]
     maze: list[str] = mp.data
 
@@ -15,7 +17,7 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
     visited: list[list[list[int]|None]] = [[None] * maze_y for _ in range(maze_x)]
     visited[start[0]][start[1]] = [-1, -1]
 
-    if forbid != []:
+    if forbid:
         visited[int(forbid[0])][int(forbid[1])] = [-1, -1]
 
     # up, down, left, right
@@ -26,16 +28,17 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
     found: bool = False
     _move_set_x = [0, 0, -1, 1]
     _move_set_y = [1, -1, 0, 0]
+    print(forbid)
 
     while len(frontier) > 0 and not found:
         current = frontier.pop()
-        rdom_succ = [0, 1, 2, 3]
+        random_successor = [0, 1, 2, 3]
         # If there is a forbidden position, choose successor randomly to avoid cycle
-        if forbid != []:
-            random.shuffle(rdom_succ)
+        if forbid:
+            random.shuffle(random_successor)
         for i in range(4):
-            _mx = current[0] + _move_set_x[rdom_succ[i]]
-            _my = current[1] + _move_set_y[rdom_succ[i]]
+            _mx = current[0] + _move_set_x[random_successor[i]]
+            _my = current[1] + _move_set_y[random_successor[i]]
             if can_go([_mx, _my], mp) and visited[_mx][_my] is None:
                 frontier.append([_mx, _my])
                 visited[_mx][_my] = current
@@ -48,8 +51,6 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
 
     if visited[int(pacman_pos[0])][int(pacman_pos[1])] is None:
         return []
-
-    # print(f"visited: {visited}")
 
     current: list[int] = [int(pacman_pos[0]), int(pacman_pos[1])]
 

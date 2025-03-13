@@ -60,7 +60,7 @@ class Ghost(Characters):
         if 1 <= self.id <= 2:
             while True:
                 collide_pos = self.collide(ghosts_pos, self.algo_path[self.algo_upd_cnt])
-                if collide_pos == []:
+                if not collide_pos:
                     break
                 # Pass collide successor to enable randomly chosen successor
                 self.update_path(_map, ghosts_pos, pacman_pos, collide_pos)
@@ -87,7 +87,7 @@ class Ghost(Characters):
     def get_next_successor(self, _map, ghosts_pos, pacman_pos):
         # Only get new successor if the ghost and pacman is inside the block
         if self.pos[0] % 1.0 == 0 and self.pos[1] % 1.0 == 0 and pacman_pos[0] % 1.0 == 0 and pacman_pos[1] % 1.0 == 0:
-            # If has finished path or pacman has moved differently 5 times => update algorithm
+            # If it has finished path or pacman has moved differently 5 times => update algorithm
             # Add pacman checking to efficiently update ghosts 
             if self.algo_upd_cnt == -1 or self.algo_upd_cnt >= self.algo_upd_limit or self.pacman_changing == 5:
                 self.update_path(_map, ghosts_pos, pacman_pos)
