@@ -1,7 +1,6 @@
 from map import *
 from util import *
 
-
 # This is a parent class of pacman and ghosts.
 # The move function of pacman and ghosts are different so it is defined in child class.
 class Characters:
@@ -52,7 +51,7 @@ class Characters:
         if d == 0:
             if self.pos[0] % 1.0 == 0 and self.pos[1] == 0:
                 if can_go([self.pos[0], 32], mp):
-                    self.prev_pos = self.pos
+                    # self.prev_pos = self.pos
                     self.pos[1] = 32
                     if is_upd:
                         self.update_dir()
@@ -60,7 +59,7 @@ class Characters:
         elif d == 1:
             if self.pos[0] % 1.0 == 0 and self.pos[1] == 32:
                 if can_go([self.pos[0], 0], mp):
-                    self.prev_pos = self.pos
+                    # self.prev_pos = self.pos
                     self.pos[1] = 0
                     if is_upd:
                         self.update_dir()
@@ -68,7 +67,7 @@ class Characters:
         elif d == 2:
             if self.pos[1] % 1.0 == 0 and self.pos[0] == 0:
                 if can_go([29, self.pos[1]], mp):
-                    self.prev_pos = self.pos
+                    # self.prev_pos = self.pos
                     self.pos[0] = 29
                     if is_upd:
                         self.update_dir()
@@ -76,7 +75,7 @@ class Characters:
         elif d == 3:
             if self.pos[1] % 1.0 == 0 and self.pos[0] == 29:
                 if can_go([0, self.pos[1]], mp):
-                    self.prev_pos = self.pos
+                    # self.prev_pos = self.pos
                     self.pos[0] = 0
                     if is_upd:
                         self.update_dir()

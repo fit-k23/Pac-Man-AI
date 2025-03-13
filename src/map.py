@@ -18,11 +18,11 @@ class Map:
                 _map.data.append(r_line)
         return _map
 
-    # def draw_grid(self, screen, screen_width, screen_height, block_width, block_height):
-    #     for x in range(0, screen_width, block_width):
-    #         for y in range(0, screen_height, block_height):
-    #             rect = pygame.Rect(x, y, block_width, block_height)
-    #             pygame.draw.rect(screen, WHITE, rect, 1)
+    def draw_grid(self, screen, screen_width, screen_height, block_width, block_height):
+        for x in range(0, screen_width, block_width):
+            for y in range(0, screen_height, block_height):
+                rect = pygame.Rect(x, y, block_width, block_height)
+                pygame.draw.rect(screen, WHITE, rect, 1)
 
     def get_character_pos(self):
         pacman = [0, 0]

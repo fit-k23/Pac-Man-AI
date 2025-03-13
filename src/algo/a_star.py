@@ -40,13 +40,17 @@ def astar(mp, ghosts_pos, id, pacman_pos):
                 dist[new_pos[0]][new_pos[1]] = new_dist + h
                 trace[new_pos[0]][new_pos[1]] = cur[2]
         
+    # Trace back to find optimal successor
     succ = []
     temp = [int(pacman_pos[0]), int(pacman_pos[1])]
+    path = []
+    limit = 0
     while temp != ghosts_pos[id]:
         succ = temp
         new_temp = trace[temp[0]][temp[1]]
         temp = new_temp
-
+    
+    # If succ occupied by other ghost
     occupied = False
     for i in range(0, 4): 
         if ghosts_pos[i] == succ:
@@ -56,9 +60,12 @@ def astar(mp, ghosts_pos, id, pacman_pos):
         for i in range(0, 4):
             new_pos = [ghosts_pos[id][0] + dx[i], ghosts_pos[id][1] + dy[i]]
             if can_go(new_pos, mp) and new_pos != succ:
-                return new_pos
-        return ghosts_pos[id]
-    return succ
+                path.append(new_pos)
+                return (path, limit)
+        path.append(ghosts_pos[id])
+        return (path, limit)
+    path.append(succ)
+    return (path, limit)
                 
         
                 

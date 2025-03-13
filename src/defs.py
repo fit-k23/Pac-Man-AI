@@ -10,10 +10,12 @@ CYAN = (0, 255, 255)
 PURPLE = (255, 0, 255)
 
 # Screen, Block parameters
-SCREEN_WIDTH: int = 750
-SCREEN_HEIGHT: int = 660
-BLOCK_W: int = SCREEN_WIDTH // 30
-BLOCK_H: int = SCREEN_HEIGHT // 33
+GRID_W: int = 40
+GRID_H: int = 33
+BLOCK_W: int = 25 
+BLOCK_H: int = 20 
+SCREEN_WIDTH: int = GRID_W * BLOCK_W
+SCREEN_HEIGHT: int = GRID_H * BLOCK_H
 
 # GHOST_ID
 CLYDE = 0 # yellow ghost -> UCS-2
@@ -22,15 +24,14 @@ INKY = 2 # blue ghost -> BFS-0
 BLINKY = 3 # red ghost -> A*-3
 
 # ALGO_ID
-PINKY_ALGO = 1
-INKY_ALGO = 0
-CLYDE_ALGO = 2
-BLINKY_ALGO = 3
+PINKY_ALGO = 1 # DFS
+INKY_ALGO = 0 # BFS
+CLYDE_ALGO = 2 # UCS
+BLINKY_ALGO = 3 # A*
 
 # Infinity value
 INF = 99999
 
 # up, down, left, right
-# 0 1 2 3
 dx = [0, 0, -1, 1]
 dy = [-1, 1, 0, 0]

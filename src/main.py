@@ -33,21 +33,21 @@ while running:
     ghosts[0].delay += 1
     ghosts[1].delay += 1
     ghosts[3].delay += 1
-
     for i in range(0, 4):
         ghosts_pos[i] = ghosts[i].pos
+
     # poll for events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_w or event.key == pygame.K_UP:
                 pacman.last_request = 0
-            elif event.key == pygame.K_s:
+            elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
                 pacman.last_request = 1
-            elif event.key == pygame.K_a:
+            elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
                 pacman.last_request = 2
-            elif event.key == pygame.K_d:
+            elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                 pacman.last_request = 3
             else:
                 pacman.last_request = -1
@@ -78,6 +78,9 @@ while running:
     if ghosts[3].delay == 2:
         ghosts[3].move(maze, ghosts_pos, pacman.pos)
         ghosts[3].delay = 0
+
+    if Ghost.eat_pacman(ghosts_pos, pacman.pos):
+        running = False
 
     # flip() the display to put your work on screen
     pygame.display.flip()

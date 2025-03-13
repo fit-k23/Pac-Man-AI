@@ -9,16 +9,18 @@ class Search:
         self.ghost = _ghost
         self.pacman = _pacman
 
-    # Get the best successor with current problem state
+    # Get the path and update limit for search problems
     # id: id of current ghost
     # ghosts_pos: positions of all ghosts
     @staticmethod
-    def get_optimal_successor(algo_id, _map: Map, ghosts_pos, id: int, pacman_pos, direction = -1):
+    def get_path(algo_id, _map: Map, ghosts_pos, id: int, pacman_pos, forbid = []):
         match algo_id:
             case 0:
-                return bfs(_map, ghosts_pos, id, pacman_pos)
+                return bfs(_map, ghosts_pos, id, pacman_pos, forbid)
             case 1:
-                return dfs(_map, ghosts_pos, id, pacman_pos, )
+                if forbid != []:
+                    print("forbid ", forbid)
+                return dfs(_map, ghosts_pos, id, pacman_pos, forbid)
             case 2:
                 return ucs(_map, ghosts_pos, id, pacman_pos)
             case 3:
