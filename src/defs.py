@@ -8,6 +8,9 @@ YELLOW = (255, 255, 0)
 MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 PURPLE = (255, 0, 255)
+color_light = (227,80,168)  
+color_dark = (149,67,167)
+blue_dark = (106,156,253)
 
 # Screen, Block parameters
 GRID_W: int = 40
@@ -35,3 +38,10 @@ INF = 99999
 # up, down, left, right
 dx = [0, 0, -1, 1]
 dy = [-1, 1, 0, 0]
+
+#button
+BUTTON_W = BLOCK_W * 5
+BUTTON_H = BLOCK_H * 2.5
+x = BLOCK_W * (GRID_W / 2 - 2.5)
+y = BLOCK_H * (GRID_H / 2 + 10)
+

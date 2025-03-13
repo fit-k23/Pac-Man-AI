@@ -11,6 +11,7 @@ pygame.font.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
+game = True
 
 # Map object
 maze = Map.parse("../asset/maps/map_02.txt")
@@ -34,6 +35,8 @@ last_score = -1
 score_font = pygame.font.SysFont('Times New Roman', 30)
 score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
 score_pos = (32 * BLOCK_W, 5 * BLOCK_H)
+smallfont = pygame.font.SysFont('Corbel',35)
+text = smallfont.render('Quit' , True , "white")
 
 # Drawing stuff on screen
 def display_game():
@@ -57,6 +60,52 @@ def display_game():
         score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
         last_score = pacman.score
     screen.blit(score_text, score_pos)
+    
+    
+def display_final_game():
+    running_final_game = True
+    while running_final_game:
+        bg = pygame.image.load(f"../pic/bg.png")
+        #draw background
+        screen.blit(bg, (0, 0))
+    
+     
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                running_final_game = False
+            if ev.type == pygame.MOUSEBUTTONDOWN: 
+                if x <= mouse[0] <= x + BUTTON_W and y <= mouse[1] <= y + BUTTON_H: 
+                  running_final_game = False  
+        
+        mouse = pygame.mouse.get_pos()
+        
+        
+        if x <= mouse[0] <= x + BUTTON_W and y <= mouse[1] <= y + BUTTON_H: 
+            rect = pygame.Rect(x, y, BUTTON_W, BUTTON_H)
+            pygame.draw.rect(screen, blue_dark, rect, border_radius=6)
+            pygame.draw.rect(screen, color_dark, rect, 3, 6)
+        else:
+            rect = pygame.Rect(x, y, BUTTON_W, BUTTON_H)
+            pygame.draw.rect(screen, color_light, rect, border_radius=6)
+            pygame.draw.rect(screen, color_dark, rect, 3, 6)
+        
+        screen.blit(text, (BLOCK_W * (GRID_W / 2 - 1.1), BLOCK_H * (GRID_H / 2 + 10.7)))
+    
+    
+        #Write score
+        score_text = smallfont.render('Score: ' + str(pacman.score), False, YELLOW)
+        screen.blit(score_text, ((x + 2 * BLOCK_W), (BLOCK_H * 2)))
+        
+        # draw pacman
+        image = pacman.textures[pacman.get_texture_index()]
+        pacman.update_animation()
+        image = pygame.transform.scale(image, (40, 40))
+        screen.blit(image, (x, (BLOCK_H * 1.5)))
+    
+        
+        pygame.display.flip()
+        clock.tick(100)    
+    
 
 def update_delay():
     pacman.delay += 1
@@ -75,46 +124,52 @@ def update_character():
         if ghosts[i].delay == delay_to_update:
             ghosts[i].move(maze, ghosts_pos, pacman.pos)
             ghosts[i].delay = 0
+while game:
+    while running:
+        # Update delay for character's update
+        update_delay()
 
-while running:
-    # Update delay for character's update
-    update_delay()
+        # Maintaining ghost positions into array ghosts_pos[]
+        for i in range(0, 4):
+            ghosts_pos[i] = ghosts[i].pos
 
-    # Maintaining ghost positions into array ghosts_pos[]
-    for i in range(0, 4):
-        ghosts_pos[i] = ghosts[i].pos
+        # poll for events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w or event.key == pygame.K_UP:
+                    pacman.last_request = 0
+                elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                    pacman.last_request = 1
+                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                    pacman.last_request = 2
+                elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                    pacman.last_request = 3
+                else:
+                    pacman.last_request = -1
 
-    # poll for events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        # fill the screen with a color to wipe away anything from last frame
+        screen.fill("black")
+
+        # Draw game onto screen
+        display_game()
+        
+        # Update character's movement
+        update_character()
+
+        # Check if pacman is eaten by ghosts
+        if Ghost.eat_pacman(ghosts_pos, pacman.pos):
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w or event.key == pygame.K_UP:
-                pacman.last_request = 0
-            elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
-                pacman.last_request = 1
-            elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
-                pacman.last_request = 2
-            elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-                pacman.last_request = 3
-            else:
-                pacman.last_request = -1
 
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("black")
-
-    # Draw game onto screen
-    display_game()
+        # flip() the display to put your work on screen
+        pygame.display.flip()
+        clock.tick(100)
     
-    # Update character's movement
-    update_character()
-
-    # Check if pacman is eaten by ghosts
-    if Ghost.eat_pacman(ghosts_pos, pacman.pos):
-        running = False
-
-    # flip() the display to put your work on screen
-    pygame.display.flip()
-
-    clock.tick(100)
+    display_final_game()
+    
+    break
 pygame.quit()
+
+    
+
