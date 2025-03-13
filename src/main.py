@@ -7,6 +7,7 @@ from defs import *
 
 # pygame setup
 pygame.init()
+pygame.font.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
@@ -28,11 +29,54 @@ ghosts[1].load_textures([f"../asset/ghost/{i}.png" for i in range(3, 4)])
 ghosts[2].load_textures([f"../asset/ghost/{i}.png" for i in range(1, 2)])
 ghosts[3].load_textures([f"../asset/ghost/{i}.png" for i in range(2, 3)])
 
-while running:
+# Text
+score_font = pygame.font.SysFont('Comic Sans MS', 30)
+score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
+score_pos = (32 * BLOCK_W, 5 * BLOCK_H)
+def display_game():
+    # Draw map
+    # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
+    maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
+    maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
+
+    # Draw map border
+    pygame.draw.rect(screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W, 32 * BLOCK_H + BLOCK_H), 2)
+
+    # Draw characters
+    pacman.draw(screen, BLOCK_W, BLOCK_H)
+    for i in range(0, 4):
+        ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
+
+    # Draw text
+    score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
+    screen.blit(score_text, score_pos)
+
+def update_delay():
     pacman.delay += 1
     ghosts[0].delay += 1
     ghosts[1].delay += 1
     ghosts[3].delay += 1
+
+def update_character():
+    delay_to_update = 3
+    if pacman.delay == delay_to_update:
+        pacman.move(maze, food_pos)
+        pacman.delay = 0
+    if ghosts[0].delay == delay_to_update:
+        ghosts[0].move(maze, ghosts_pos, pacman.pos)
+        ghosts[0].delay = 0
+    if ghosts[1].delay == delay_to_update:
+        ghosts[1].move(maze, ghosts_pos, pacman.pos)
+        ghosts[1].delay = 0
+    if ghosts[3].delay == delay_to_update:
+        ghosts[3].move(maze, ghosts_pos, pacman.pos)
+        ghosts[3].delay = 0
+
+while running:
+    # Update delay for character's update
+    update_delay()
+
+    # Maintaining ghost positions into array ghosts_pos[]
     for i in range(0, 4):
         ghosts_pos[i] = ghosts[i].pos
 
@@ -55,35 +99,18 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
 
-    # Draw map
-    # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
-    maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
-    maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
-
-    # Draw characters
-    pacman.draw(screen, BLOCK_W, BLOCK_H)
-    for i in range(0, 4):
-        ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
+    # Draw game onto screen
+    display_game()
     
     # Update character's movement
-    if pacman.delay == 2:
-        pacman.move(maze, food_pos)
-        pacman.delay = 0
-    if ghosts[0].delay == 2:
-        ghosts[0].move(maze, ghosts_pos, pacman.pos)
-        ghosts[0].delay = 0
-    if ghosts[1].delay == 2:
-        ghosts[1].move(maze, ghosts_pos, pacman.pos)
-        ghosts[1].delay = 0
-    if ghosts[3].delay == 2:
-        ghosts[3].move(maze, ghosts_pos, pacman.pos)
-        ghosts[3].delay = 0
+    update_character()
 
+    # Check if pacman is eaten by ghosts
     if Ghost.eat_pacman(ghosts_pos, pacman.pos):
         running = False
 
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(60)
+    clock.tick(100)
 pygame.quit()

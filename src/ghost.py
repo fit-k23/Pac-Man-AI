@@ -51,7 +51,8 @@ class Ghost(Characters):
 
     # update new path for ghost
     def update_path(self, _map, ghosts_pos, pacman_pos, forbid = []):
-        (self.algo_path, self.algo_upd_limit) = Search.get_path(self.algo_id, _map, ghosts_pos, self.id, pacman_pos, forbid)
+        self.algo_path = Search.get_path(self.algo_id, _map, ghosts_pos, self.id, pacman_pos, forbid)
+        self.algo_upd_limit = len(self.algo_path) - 1
         self.algo_upd_cnt = 0
 
     # If another ghost is in the successor, re-update the path with the forbidden successor

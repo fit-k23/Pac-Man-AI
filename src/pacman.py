@@ -4,8 +4,10 @@ from defs import *
 
 # Direction: 0 - up, 1 - down, 2 - left, 3 - right
 class Pacman(Characters):
+    score = 0
     def __init__(self, _pos):
         super().__init__(_pos)  # Call Character's constructor
+        self.score = 0
 
     # Move the pacman and eat food
     def move(self, mp, food_pos):
@@ -64,5 +66,6 @@ class Pacman(Characters):
                 self.prev_pos = self.pos
                 self.pos[0] += self.velocity
 
-        mp.erase_food(food_pos, self.pos[1], self.pos[0])
+        if mp.erase_food(food_pos, self.pos[1], self.pos[0]):
+            self.score += 1
         

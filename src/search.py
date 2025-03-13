@@ -18,8 +18,6 @@ class Search:
             case 0:
                 return bfs(_map, ghosts_pos, id, pacman_pos, forbid)
             case 1:
-                if forbid != []:
-                    print("forbid ", forbid)
                 return dfs(_map, ghosts_pos, id, pacman_pos, forbid)
             case 2:
                 return ucs(_map, ghosts_pos, id, pacman_pos)

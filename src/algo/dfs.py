@@ -44,10 +44,10 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
                     break
     if not found:
         print("ERROR: destination node is unreachable")
-        return ([], -1)
+        return []
 
     if visited[int(pacman_pos[0])][int(pacman_pos[1])] is None:
-        return ([], -1)
+        return []
 
     # print(f"visited: {visited}")
 
@@ -63,4 +63,4 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
         current = _next
 
     trace_path.reverse()
-    return (trace_path, len(trace_path) - 1) # return path
+    return trace_path

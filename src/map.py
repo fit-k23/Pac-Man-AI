@@ -87,6 +87,8 @@ class Map:
     def erase_food(self, food_pos, x, y):
         if (x, y) in food_pos:
             food_pos.remove((x, y))
+            return True
+        return False
 
 
 

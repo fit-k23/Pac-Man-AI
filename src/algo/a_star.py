@@ -44,7 +44,6 @@ def astar(mp, ghosts_pos, id, pacman_pos):
     succ = []
     temp = [int(pacman_pos[0]), int(pacman_pos[1])]
     path = []
-    limit = 0
     while temp != ghosts_pos[id]:
         succ = temp
         new_temp = trace[temp[0]][temp[1]]
@@ -61,24 +60,8 @@ def astar(mp, ghosts_pos, id, pacman_pos):
             new_pos = [ghosts_pos[id][0] + dx[i], ghosts_pos[id][1] + dy[i]]
             if can_go(new_pos, mp) and new_pos != succ:
                 path.append(new_pos)
-                return (path, limit)
+                return path
         path.append(ghosts_pos[id])
-        return (path, limit)
+        return path
     path.append(succ)
-    return (path, limit)
-                
-        
-                
-                
-            
-            
-                
-                
-            
-            
-            
-            
-            
-            
-            
-    return None
+    return path
