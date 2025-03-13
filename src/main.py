@@ -62,6 +62,7 @@ def update_delay():
     pacman.delay += 1
     ghosts[0].delay += 1
     ghosts[1].delay += 1
+    ghosts[2].delay += 1
     ghosts[3].delay += 1
 
 # Update after delay time for smoother movement
@@ -70,15 +71,10 @@ def update_character():
     if pacman.delay == delay_to_update:
         pacman.move(maze, food_pos)
         pacman.delay = 0
-    if ghosts[0].delay == delay_to_update:
-        ghosts[0].move(maze, ghosts_pos, pacman.pos)
-        ghosts[0].delay = 0
-    if ghosts[1].delay == delay_to_update:
-        ghosts[1].move(maze, ghosts_pos, pacman.pos)
-        ghosts[1].delay = 0
-    if ghosts[3].delay == delay_to_update:
-        ghosts[3].move(maze, ghosts_pos, pacman.pos)
-        ghosts[3].delay = 0
+    for i in range(4):
+        if ghosts[i].delay == delay_to_update:
+            ghosts[i].move(maze, ghosts_pos, pacman.pos)
+            ghosts[i].delay = 0
 
 while running:
     # Update delay for character's update

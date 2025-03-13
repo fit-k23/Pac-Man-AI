@@ -25,7 +25,7 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
 
     found: bool = False
     _move_set_x = [0, 0, -1, 1]
-    _move_set_y = [-1, 1, 0, 0]
+    _move_set_y = [1, -1, 0, 0]
 
     while len(frontier) > 0 and not found:
         current = frontier.pop()

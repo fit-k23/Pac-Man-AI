@@ -44,7 +44,6 @@ def ucs(mp, ghosts_pos, id, pacman_pos):
     succ = []
     temp = [int(pacman_pos[0]), int(pacman_pos[1])]
     path = []
-    limit = 0
     while temp != ghosts_pos[id]:
         succ = temp
         new_temp = trace[temp[0]][temp[1]]
