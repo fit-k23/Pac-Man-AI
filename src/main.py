@@ -71,7 +71,7 @@ def display_game():
 def display_final_game():
     running_final_game = True
     while running_final_game:
-        bg = pygame.image.load(f"../pic/bg.png")
+        bg = pygame.image.load(get_file_absolute_path(f"../asset/background/game_over.png"))
         #draw background
         screen.blit(bg, (0, 0))
     
@@ -129,6 +129,10 @@ def update_character():
         if ghosts[i].delay == delay_to_update:
             ghosts[i].move(maze, ghosts_pos, pacman.pos)
             ghosts[i].delay = 0
+
+font_size = 36
+font = pygame.font.Font(None, font_size)
+
 while game:
     while running:
         # Update delay for character's update
@@ -139,6 +143,7 @@ while game:
             ghosts_pos[i] = ghosts[i].pos
 
         # poll for events
+        # print(pygame.event.get())
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -162,6 +167,12 @@ while game:
         
         # Update character's movement
         update_character()
+
+        fps = int(clock.get_fps())  # Convert to integer for clean display
+
+        # Render FPS text
+        fps_text = font.render(f"FPS: {fps}", True, (255, 255, 255))  # White color
+        screen.blit(fps_text, (SCREEN_WIDTH - 100, SCREEN_HEIGHT - font_size))
 
         # Check if pacman is eaten by ghosts
         if Ghost.eat_pacman(ghosts_pos, pacman.pos):
