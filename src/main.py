@@ -30,10 +30,10 @@ ghosts = [Clyde(ghosts_pos[0], CLYDE, CLYDE_ALGO), Pinky(ghosts_pos[1], PINKY, P
 
 # Load character's textures
 pacman.load_textures([get_file_absolute_path(f"../asset/pacman/pacman_{i}.png") for i in range(1, 9)])
-ghosts[0].load_textures([get_file_absolute_path(f"../asset/ghost/{i}.png") for i in range(4, 5)])
-ghosts[1].load_textures([get_file_absolute_path(f"../asset/ghost/{i}.png") for i in range(3, 4)])
-ghosts[2].load_textures([get_file_absolute_path(f"../asset/ghost/{i}.png") for i in range(1, 2)])
-ghosts[3].load_textures([get_file_absolute_path(f"../asset/ghost/{i}.png") for i in range(2, 3)])
+ghosts[0].load_textures([get_file_absolute_path("../asset/ghost/4.png")])
+ghosts[1].load_textures([get_file_absolute_path("../asset/ghost/3.png")])
+ghosts[2].load_textures([get_file_absolute_path("../asset/ghost/1.png")])
+ghosts[3].load_textures([get_file_absolute_path("../asset/ghost/2.png")])
 
 # Text
 last_score = -1
