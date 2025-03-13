@@ -28,14 +28,17 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
     found: bool = False
     _move_set_x = [0, 0, -1, 1]
     _move_set_y = [1, -1, 0, 0]
-    print(forbid)
+    # print(forbid)
+
+    random_once = True
 
     while len(frontier) > 0 and not found:
         current = frontier.pop()
         random_successor = [0, 1, 2, 3]
         # If there is a forbidden position, choose successor randomly to avoid cycle
-        if forbid:
+        if forbid and random_once:
             random.shuffle(random_successor)
+            random_once = False
         for i in range(4):
             _mx = current[0] + _move_set_x[random_successor[i]]
             _my = current[1] + _move_set_y[random_successor[i]]

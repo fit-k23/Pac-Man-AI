@@ -39,9 +39,9 @@ INF = 99999
 dx = [0, 0, -1, 1]
 dy = [-1, 1, 0, 0]
 
-#button
+# button
 BUTTON_W = BLOCK_W * 5
 BUTTON_H = BLOCK_H * 2.5
-x = BLOCK_W * (GRID_W / 2 - 2.5)
-y = BLOCK_H * (GRID_H / 2 + 10)
+button_x = BLOCK_W * (GRID_W / 2 - 2.5)
+button_y = BLOCK_H * (GRID_H / 2 + 10)
 

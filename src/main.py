@@ -60,12 +60,12 @@ def display_game():
         ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
 
     # Draw text
-    global last_score
-    global score_text
-    if pacman.score != last_score:
-        score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
-        last_score = pacman.score
-    screen.blit(score_text, score_pos)
+    # global last_score
+    # global score_text
+    # if pacman.score != last_score:
+    #     score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
+    #     last_score = pacman.score
+    # screen.blit(score_text, score_pos)
     
     
 def display_final_game():
@@ -75,23 +75,22 @@ def display_final_game():
         #draw background
         screen.blit(bg, (0, 0))
     
-     
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
                 running_final_game = False
             if ev.type == pygame.MOUSEBUTTONDOWN: 
-                if x <= mouse[0] <= x + BUTTON_W and y <= mouse[1] <= y + BUTTON_H: 
+                if button_x <= mouse[0] <= button_x + BUTTON_W and button_y <= mouse[1] <= button_y + BUTTON_H: 
                   running_final_game = False  
         
         mouse = pygame.mouse.get_pos()
         
         
-        if x <= mouse[0] <= x + BUTTON_W and y <= mouse[1] <= y + BUTTON_H: 
-            rect = pygame.Rect(x, y, BUTTON_W, BUTTON_H)
+        if button_x <= mouse[0] <= button_x + BUTTON_W and button_y <= mouse[1] <= button_y + BUTTON_H: 
+            rect = pygame.Rect(button_x, button_y, BUTTON_W, BUTTON_H)
             pygame.draw.rect(screen, blue_dark, rect, border_radius=6)
             pygame.draw.rect(screen, color_dark, rect, 3, 6)
         else:
-            rect = pygame.Rect(x, y, BUTTON_W, BUTTON_H)
+            rect = pygame.Rect(button_x, button_y, BUTTON_W, BUTTON_H)
             pygame.draw.rect(screen, color_light, rect, border_radius=6)
             pygame.draw.rect(screen, color_dark, rect, 3, 6)
         
@@ -100,13 +99,13 @@ def display_final_game():
     
         #Write score
         score_text = smallfont.render('Score: ' + str(pacman.score), False, YELLOW)
-        screen.blit(score_text, ((x + 2 * BLOCK_W), (BLOCK_H * 2)))
+        screen.blit(score_text, ((button_x + 2 * BLOCK_W), (BLOCK_H * 2)))
         
         # draw pacman
         image = pacman.textures[pacman.get_texture_index()]
         pacman.update_animation()
         image = pygame.transform.scale(image, (40, 40))
-        screen.blit(image, (x, (BLOCK_H * 1.5)))
+        screen.blit(image, (button_x, (BLOCK_H * 1.5)))
     
         
         pygame.display.flip()
@@ -115,10 +114,10 @@ def display_final_game():
 
 def update_delay():
     pacman.delay += 1
-    # ghosts[0].delay += 1
+    ghosts[0].delay += 1
     ghosts[1].delay += 1
-    # ghosts[2].delay += 1
-    # ghosts[3].delay += 1
+    ghosts[2].delay += 1
+    ghosts[3].delay += 1
 
 # Update after delay time for smoother movement
 def update_character():
