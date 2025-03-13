@@ -10,7 +10,6 @@ class Characters:
     delay = 0 # delay for slow movement
     last_request = -1 # save the last request to change direction
     velocity = 1 / 4 # velocity
-
     # Constructor
     def __init__(self, _pos):
         self.pos = _pos  
@@ -23,7 +22,10 @@ class Characters:
         self.textures = []
         self.__texture_index = -1
         self.__last_update = pygame.time.get_ticks()
-        self.__animation_speed = 50  
+        self.__animation_speed = 50 
+        
+    def get_texture_index(self):
+        return self.__texture_index 
     
     # Update direction according to last request
     def update_dir(self):
