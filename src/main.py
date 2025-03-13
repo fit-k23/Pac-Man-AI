@@ -12,8 +12,14 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
 
+import os
+run_path = os.path.dirname(os.path.abspath(__file__))
+def get_file_absolute_path(file_path):
+    return os.path.abspath(str(os.path.join(run_path, file_path)))
+
 # Map object
-maze = Map.parse("../asset/maps/map_02.txt")
+# maze = Map.parse("../asset/maps/map_02.txt")
+maze = Map.parse(get_file_absolute_path("../asset/maps/map_02.txt"))
 
 # Get position of pacman, ghosts, and food at first
 (pacman_pos, ghosts_pos) = maze.get_character_pos()
@@ -23,11 +29,11 @@ ghosts = [Clyde(ghosts_pos[0], CLYDE, CLYDE_ALGO), Pinky(ghosts_pos[1], PINKY, P
           Blinky(ghosts_pos[3], BLINKY, BLINKY_ALGO)]
 
 # Load character's textures
-pacman.load_textures([f"../asset/pacman/pacman_{i}.png" for i in range(1, 9)])
-ghosts[0].load_textures([f"../asset/ghost/{i}.png" for i in range(4, 5)])
-ghosts[1].load_textures([f"../asset/ghost/{i}.png" for i in range(3, 4)])
-ghosts[2].load_textures([f"../asset/ghost/{i}.png" for i in range(1, 2)])
-ghosts[3].load_textures([f"../asset/ghost/{i}.png" for i in range(2, 3)])
+pacman.load_textures([get_file_absolute_path(f"../asset/pacman/pacman_{i}.png") for i in range(1, 9)])
+ghosts[0].load_textures([get_file_absolute_path(f"../asset/ghost/{i}.png") for i in range(4, 5)])
+ghosts[1].load_textures([get_file_absolute_path(f"../asset/ghost/{i}.png") for i in range(3, 4)])
+ghosts[2].load_textures([get_file_absolute_path(f"../asset/ghost/{i}.png") for i in range(1, 2)])
+ghosts[3].load_textures([get_file_absolute_path(f"../asset/ghost/{i}.png") for i in range(2, 3)])
 
 # Text
 last_score = -1
@@ -60,10 +66,10 @@ def display_game():
 
 def update_delay():
     pacman.delay += 1
-    ghosts[0].delay += 1
+    # ghosts[0].delay += 1
     ghosts[1].delay += 1
-    ghosts[2].delay += 1
-    ghosts[3].delay += 1
+    # ghosts[2].delay += 1
+    # ghosts[3].delay += 1
 
 # Update after delay time for smoother movement
 def update_character():
