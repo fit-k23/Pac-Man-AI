@@ -8,21 +8,20 @@ from map import Map
 class GhostState(Enum):
     IDLE = 0 # Doing absolutely nothing
     REST = 1 # Resting in the cage, moving up and down
-    WONDER = 2 # Move around randomly, doing random stuff
+    WANDER = 2 # Move around randomly, doing random stuff
     TARGETED = 3 # Rush toward pacman, targeted hunting
     RUN_AWAY = 4 # Run away from pacman
 
 class Ghost(Characters):
     state = GhostState.IDLE
-    algo_id = -1
-    id = -1
-    successor = [-1, -1]
-    canMove = False
-    algo_path = []
-    algo_upd_cnt = -1
-    algo_upd_limit = 0
-    pacman_changing = 0
-    pacman_prev_pos = [-1, -1]
+    algo_id = -1 # algorithm id for the ghost
+    id = -1 # ghost id
+    successor = [-1, -1] # next step to move
+    algo_path = [] # Current path to reach pacman
+    algo_upd_cnt = -1 # Iterator of the array algo_path[]
+    algo_upd_limit = 0 # Limit of the iterator
+    pacman_changing = 0 # Count how many times pacman switch positions
+    pacman_prev_pos = [-1, -1] # Keep track of pacman's previous position
 
     # Ghost constructor
     def __init__(self, _pos, _id, _algo_id):
@@ -38,7 +37,7 @@ class Ghost(Characters):
         self.pacman_changing = 0
         self.pacman_prev_pos = [-1, -1]
 
-    # Move toward successor
+    # Move toward successor - only 1 block move
     def update_pos(self):
         if self.pos[0] < self.successor[0]:
             self.pos[0] += self.velocity
@@ -49,7 +48,7 @@ class Ghost(Characters):
         elif self.pos[1] > self.successor[1]:
             self.pos[1] -= self.velocity
 
-    # update new path for ghost
+    # Update the new path for ghost
     def update_path(self, _map, ghosts_pos, pacman_pos, forbid = []):
         self.algo_path = Search.get_path(self.algo_id, _map, ghosts_pos, self.id, pacman_pos, forbid)
         self.algo_upd_limit = len(self.algo_path) - 1
@@ -68,7 +67,7 @@ class Ghost(Characters):
 
     # Check if any ghost in successor
     def collide(self, ghosts_pos, pos):
-        eps = 0.9
+        eps = 0.9 # Create better effect for ghost colliding
         for i in range(4):
             if i != self.id:
                 if math.fabs(ghosts_pos[i][0] - pos[0]) <= eps and math.fabs(ghosts_pos[i][1] - pos[1]) <= eps:
@@ -86,7 +85,10 @@ class Ghost(Characters):
 
     # Get the next successor
     def get_next_successor(self, _map, ghosts_pos, pacman_pos):
+        # Only get new successor if the ghost and pacman is inside the block
         if self.pos[0] % 1.0 == 0 and self.pos[1] % 1.0 == 0 and pacman_pos[0] % 1.0 == 0 and pacman_pos[1] % 1.0 == 0:
+            # If has finished path or pacman has moved differently 5 times => update algorithm
+            # Add pacman checking to efficiently update ghosts 
             if self.algo_upd_cnt == -1 or self.algo_upd_cnt >= self.algo_upd_limit or self.pacman_changing == 5:
                 self.update_path(_map, ghosts_pos, pacman_pos)
                 self.update_collide_path(_map, ghosts_pos, pacman_pos)
@@ -95,10 +97,12 @@ class Ghost(Characters):
                 self.algo_upd_cnt += 1
                 self.update_collide_path(_map, ghosts_pos, pacman_pos)
                 return self.algo_path[self.algo_upd_cnt]
+        # If cannot move, ghost will wait (return current successor)
         return self.successor
 
     # Move the ghost
     def move(self, _map: Map, ghosts_pos, pacman_pos):    
+        # Updating pacman check
         if pacman_pos[0] % 1.0 == 0 and pacman_pos[1] % 1.0 == 0:
             if self.pacman_prev_pos == [-1, -1]:
                 self.pacman_prev_pos = pacman_pos

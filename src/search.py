@@ -9,9 +9,10 @@ class Search:
         self.ghost = _ghost
         self.pacman = _pacman
 
-    # Get the path and update limit for search problems
+    # Get the path for corresponding search problems
     # id: id of current ghost
     # ghosts_pos: positions of all ghosts
+    # forbid: save ghost colliding positions to avoid same-block ghosts situation
     @staticmethod
     def get_path(algo_id, _map: Map, ghosts_pos, id: int, pacman_pos, forbid = []):
         match algo_id:

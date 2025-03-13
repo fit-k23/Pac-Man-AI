@@ -30,9 +30,12 @@ ghosts[2].load_textures([f"../asset/ghost/{i}.png" for i in range(1, 2)])
 ghosts[3].load_textures([f"../asset/ghost/{i}.png" for i in range(2, 3)])
 
 # Text
-score_font = pygame.font.SysFont('Comic Sans MS', 30)
+last_score = -1
+score_font = pygame.font.SysFont('Times New Roman', 30)
 score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
 score_pos = (32 * BLOCK_W, 5 * BLOCK_H)
+
+# Drawing stuff on screen
 def display_game():
     # Draw map
     # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
@@ -40,7 +43,7 @@ def display_game():
     maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 
     # Draw map border
-    pygame.draw.rect(screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W, 32 * BLOCK_H + BLOCK_H), 2)
+    pygame.draw.rect(screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2)
 
     # Draw characters
     pacman.draw(screen, BLOCK_W, BLOCK_H)
@@ -48,7 +51,11 @@ def display_game():
         ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
 
     # Draw text
-    score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
+    global last_score
+    global score_text
+    if pacman.score != last_score:
+        score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
+        last_score = pacman.score
     screen.blit(score_text, score_pos)
 
 def update_delay():
@@ -57,6 +64,7 @@ def update_delay():
     ghosts[1].delay += 1
     ghosts[3].delay += 1
 
+# Update after delay time for smoother movement
 def update_character():
     delay_to_update = 3
     if pacman.delay == delay_to_update:
