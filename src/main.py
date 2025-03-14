@@ -108,7 +108,52 @@ def display_final_game():
         screen.blit(image, (button_x, (BLOCK_H * 1.5)))
         
         pygame.display.flip()
-        clock.tick(100)    
+        clock.tick(100)   
+
+def show_start_menu():
+    menu_image = pygame.image.load(get_file_absolute_path(f"../asset/background/game_start.png"))
+    menu_image = pygame.transform.scale(menu_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+    button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2+75, 200, 60)
+    button_text = font.render("START", True, WHITE)
+    button_rect2 = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 150, 200, 60)
+    button_text2 = font.render("QUIT", True, WHITE)
+
+    running = True
+    while running:
+        mouse = pygame.mouse.get_pos()
+        screen.blit(menu_image, (0, 0))
+        if button_rect.x <= mouse[0] <= button_rect.x + 200 and button_rect.y <= mouse[1] <= button_rect.y+60:
+            pygame.draw.rect(screen, blue_dark, button_rect, border_radius=10)
+            pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
+            screen.blit(button_text, (button_rect.x + 65, button_rect.y + 15))
+        else:
+            pygame.draw.rect(screen, color_light, button_rect, border_radius=10)
+            pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
+            screen.blit(button_text, (button_rect.x + 65, button_rect.y + 15))
+        if button_rect2.x <= mouse[0] <= button_rect2.x + 200 and button_rect2.y <= mouse[1] <= button_rect2.y+60:
+            pygame.draw.rect(screen, blue_dark, button_rect2, border_radius=10)
+            pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
+            screen.blit(button_text2, (button_rect2.x + 72, button_rect2.y + 15))
+        else:
+            pygame.draw.rect(screen, color_light, button_rect2, border_radius=10)
+            pygame.draw.rect(screen, color_dark, button_rect2, 3, 10)
+            screen.blit(button_text2, (button_rect2.x + 72, button_rect2.y + 15))
+
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_rect2.collidepoint(event.pos):
+                    pygame.quit()
+                    exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_rect.collidepoint(event.pos):
+                    running = False
+
+
     
 
 def update_delay():
@@ -131,7 +176,7 @@ def update_character():
 
 font_size = 36
 font = pygame.font.Font(None, font_size)
-
+show_start_menu()
 while running:
     # Update delay for character's update
     update_delay()
