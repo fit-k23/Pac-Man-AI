@@ -2,7 +2,7 @@ from queue import PriorityQueue
 from util import *
 from defs import *
 
-def astar(mp, ghosts_pos, id, pacman_pos, forbid = []):
+def astar(mp, ghosts_pos, id, pacman_pos, succ_list):
     pq = PriorityQueue()  
     dist = []
     trace = [] # trace[x][y] = [pre_x, pre_y]
@@ -14,30 +14,36 @@ def astar(mp, ghosts_pos, id, pacman_pos, forbid = []):
             trace_arr.append([-1, -1])
         dist.append(col)
         trace.append(trace_arr)
-        
-    init = (get_heuristic(ghosts_pos[id], pacman_pos), 0, [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]) 
+    
+    start = [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]
+
+    init = (get_heuristic(ghosts_pos[id], pacman_pos), 0, start) 
     pq.put(init)
     dist[int(ghosts_pos[id][0])][int(ghosts_pos[id][1])] = get_heuristic(ghosts_pos[id], pacman_pos)
 
-    if forbid:
-        print("A* ", forbid)
+    # if forbid:
+    #     print("A* ", forbid)
+    cnt_loop = 0
 
-    while pq: 
+    found = False
+    while pq.qsize() > 0: 
         cur = pq.get()
         # print("cur = ", cur)
         if cur[2] == pacman_pos:
+            found = True
             break
         
         if cur[0] != dist[cur[2][0]][cur[2][1]]:
             continue
         
         for i in range(4):
-            random_successor = [0, 1, 2, 3]
-            # If there is a forbidden position, choose successor randomly to avoid cycle
-            if forbid != [] and cur[2] == [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]:
-                random.shuffle(random_successor)
-            new_pos = [cur[2][0] + dx[random_successor[i]], cur[2][1] + dy[random_successor[i]]]
-            if can_go(new_pos, mp) == False or (forbid != [] and new_pos == forbid):
+            new_pos = [cur[2][0] + dx[i], cur[2][1] + dy[i]]
+
+            if can_go(new_pos, mp) == False:
+                continue
+
+            if cur[2] == start and in_succ_list(succ_list, id, new_pos):
+                # print("A* will find diff path")
                 continue
         
             h = get_heuristic(new_pos, pacman_pos)
@@ -47,6 +53,14 @@ def astar(mp, ghosts_pos, id, pacman_pos, forbid = []):
                 pq.put((h + new_dist, new_dist, new_pos))
                 dist[new_pos[0]][new_pos[1]] = new_dist + h
                 trace[new_pos[0]][new_pos[1]] = cur[2]
+        cnt_loop += 1
+        if cnt_loop >= 100:
+            print("a* wrong")
+            break
+    
+    if not found:
+        # print("A* cannot found destination")
+        return [start]
         
     # Trace back to find optimal successor
     succ = []
@@ -60,7 +74,11 @@ def astar(mp, ghosts_pos, id, pacman_pos, forbid = []):
     
     path.reverse()
     
-    del dist[:]
-    del trace[:]
+    del pq
+    del dist
+    del trace
     
+    if path == []:
+        path = [start]
+
     return path

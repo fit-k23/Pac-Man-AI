@@ -29,6 +29,10 @@ pacman = Pacman(pacman_pos)
 ghosts = [Clyde(ghosts_pos[0], CLYDE, CLYDE_ALGO), Pinky(ghosts_pos[1], PINKY, PINKY_ALGO), Inky(ghosts_pos[2], INKY, INKY_ALGO),
           Blinky(ghosts_pos[3], BLINKY, BLINKY_ALGO)]
 
+succ_list = []
+for i in range(4):
+    succ_list.append(ghosts_pos[i])
+
 # Load character's textures
 pacman.load_textures([get_file_absolute_path(f"../asset/pacman/pacman_{i}.png") for i in range(1, 9)])
 ghosts[0].load_textures([get_file_absolute_path("../asset/ghost/4.png")])
@@ -47,7 +51,7 @@ text = smallfont.render('Quit' , True , "white")
 # Drawing stuff on screen
 def display_game():
     # Draw map
-    # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
+    maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
     maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
     maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 
@@ -58,14 +62,6 @@ def display_game():
     pacman.draw(screen, BLOCK_W, BLOCK_H)
     for i in range(0, 4):
         ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
-
-    # Draw text
-    # global last_score
-    # global score_text
-    # if pacman.score != last_score:
-    #     score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
-    #     last_score = pacman.score
-    # screen.blit(score_text, score_pos)
     
     
 def display_final_game():
@@ -83,7 +79,6 @@ def display_final_game():
                   running_final_game = False  
         
         mouse = pygame.mouse.get_pos()
-        
         
         if button_x <= mouse[0] <= button_x + BUTTON_W and button_y <= mouse[1] <= button_y + BUTTON_H: 
             rect = pygame.Rect(button_x, button_y, BUTTON_W, BUTTON_H)
@@ -151,10 +146,7 @@ def show_start_menu():
                     exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_rect.collidepoint(event.pos):
-                    running = False
-
-
-    
+                    running = False 
 
 def update_delay():
     pacman.delay += 1
@@ -171,9 +163,13 @@ def update_character():
         pacman.delay = 0
     for i in range(4):
         if ghosts[i].delay == delay_to_update:
-            ghosts[i].move(maze, ghosts_pos, pacman.pos)
+            # print("Turn", i, "cur pos", ghosts[i].pos, "limit", ghosts[i].algo_upd_limit)
+            ghosts[i].move(maze, ghosts_pos, succ_list, pacman.pos)
             ghosts[i].delay = 0
-
+            succ_list[i] = ghosts[i].successor
+            # print("Ghost", i, "pos", ghosts[i].pos, "cnt", ghosts[i].algo_upd_cnt, "\npath", ghosts[i].algo_path)
+            # print("Next successor is ", succ_list[i])
+        
 font_size = 36
 font = pygame.font.Font(None, font_size)
 show_start_menu()
@@ -185,8 +181,15 @@ while running:
     for i in range(0, 4):
         ghosts_pos[i] = ghosts[i].pos
 
+    # for i in range(4):
+    #     for j in range(i + 1, 4):
+    #         if ghosts_pos[i] == ghosts_pos[j]:
+    #             print(i, j, ghosts_pos[i], succ_list[i], ghosts_pos[j], succ_list[j])
+    # for i in range(4):
+    #     print(ghosts_pos[i], succ_list[i], end = " ")
+    # print()
+
     # poll for events
-    # print(pygame.event.get())
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False

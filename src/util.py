@@ -1,6 +1,13 @@
 import sys
 import random
 
+def in_succ_list(succ_list, id, pos):
+    for i in range(4):
+        if i != id:
+            if succ_list[i] == pos:
+                return True
+    return False
+
 # Check if position is valid
 # check_pos is array type [], (x, y) coordinates
 def can_go(check_pos, mp) -> bool:

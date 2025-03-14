@@ -2,12 +2,12 @@ from search import *
 from map import Map
 from util import *
 from defs import *
-import queue
+from collections import deque
 import random
 
-def bfs(mp, ghosts_pos, id, pacman_pos, forbid = []):
+def bfs(mp, ghosts_pos, id, pacman_pos, succ_list):
     # Initialize queue, visited, and trace array
-    queue = []
+    queue = deque()
     visited = []
     trace = []
     start = [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]
@@ -18,34 +18,38 @@ def bfs(mp, ghosts_pos, id, pacman_pos, forbid = []):
         trace.append([[-1, -1] for _ in range(33)])
 
     visited[int(start[0])][int(start[1])] = True
-    if forbid != []:
-        visited[int(forbid[0])][int(forbid[1])] = True
-        print("bfs ", forbid)
-
+    
     found = False
+    cnt_loop = 0
     while len(queue) > 0 and found == False:
-        cur_pos = queue.pop(0)
+        cur_pos = queue.popleft()
 
         if cur_pos == pacman_pos:
+            found = True
             break
-
-        rdom_succ = [0, 1, 2, 3]
-        # If there is a forbidden position, choose successor randomly to avoid cycle
-        if forbid != [] and cur_pos == start:
-            random.shuffle(rdom_succ)
         
         for i in range(4):
-            new_pos = [cur_pos[0] + dx[rdom_succ[i]], cur_pos[1] + dy[rdom_succ[i]]]
+            new_pos = [cur_pos[0] + dx[i], cur_pos[1] + dy[i]]
 
-            if can_go(new_pos, mp) and not visited[int(new_pos[0])][int(new_pos[1])]:
-                queue.append((new_pos))
-                visited[int(new_pos[0])][int(new_pos[1])] = True
-                trace[int(new_pos[0])][int(new_pos[1])] = cur_pos
+            if can_go(new_pos, mp) == False or visited[new_pos[0]][new_pos[1]] or (cur_pos == start and in_succ_list(succ_list, id, new_pos)):
+                continue
 
-                if new_pos == pacman_pos:
-                    found = True
-                    break
+            queue.append((new_pos))
+            visited[int(new_pos[0])][int(new_pos[1])] = True
+            trace[int(new_pos[0])][int(new_pos[1])] = cur_pos
 
+            if new_pos == pacman_pos:
+                found = True
+                break
+
+        cnt_loop += 1
+        if cnt_loop >= 600:
+            print("bfs wrong")
+            break
+
+    if not found:
+        return [start]
+    
     # Trace back to find path
     succ = []
     temp = [int(pacman_pos[0]), int(pacman_pos[1])]
@@ -58,7 +62,10 @@ def bfs(mp, ghosts_pos, id, pacman_pos, forbid = []):
 
     path.reverse()
 
-    del queue[:]
-    del trace[:]
+    del queue
+    del trace
+
+    if path == []:
+        path = [start]
 
     return path

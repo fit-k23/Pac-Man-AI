@@ -39,6 +39,8 @@ class Ghost(Characters):
 
     # Move toward successor - only 1 block move
     def update_pos(self):
+        if self.successor is None:
+            return
         if self.pos[0] < self.successor[0]:
             self.pos[0] += self.velocity
         elif self.pos[0] > self.successor[0]:
@@ -49,35 +51,63 @@ class Ghost(Characters):
             self.pos[1] -= self.velocity
 
     # Update the new path for ghost
-    def update_path(self, _map, ghosts_pos, pacman_pos, forbid = []):
-        self.algo_path = Search.get_path(self.algo_id, _map, ghosts_pos, self.id, pacman_pos, forbid)
-        if 1 <= self.id <= 2:
-            self.algo_upd_limit = len(self.algo_path) - 1
-        else:
-            self.algo_upd_limit = len(self.algo_path) // 2
+    def update_path(self, _map, ghosts_pos, pacman_pos, succ_list):
+        self.algo_path = Search.get_path(self.algo_id, _map, ghosts_pos, self.id, pacman_pos, succ_list)
         self.algo_upd_cnt = 0
+        self.algo_upd_limit = len(self.algo_path) - 1
 
     # If another ghost is in the successor, re-update the path with the forbidden successor
-    # Only apply to dfs and bfs, A* and UCS avoid ghost-colliding before return successor
-    def update_collide_path(self, _map, ghosts_pos, pacman_pos):
-        while True:
-            collide_pos = self.collide(ghosts_pos, self.algo_path[self.algo_upd_cnt])
-            if not collide_pos:
+    def update_collide_path(self, _map, ghosts_pos, succ_list, pacman_pos):
+        avoid_loop_save = []
+        cnt_loop = 0
+        while True and self.algo_upd_cnt < len(self.algo_path):
+            collide_pos = []
+            self.cur_succ = self.algo_path[self.algo_upd_cnt]
+            for i in range(4):
+                if succ_list[i] == self.cur_succ:
+                    collide_pos = succ_list[i]
+            if collide_pos == []:
+                break
+            if collide_pos in avoid_loop_save:
+                break
+            avoid_loop_save.append(collide_pos)
+            cnt_loop += 1
+            if cnt_loop >= 8:
+                print("id = ", self.id, " collide pos = ", collide_pos)
                 break
             # Pass collide successor to enable randomly chosen successor
             self.update_path(_map, ghosts_pos, pacman_pos, collide_pos)
-            print("hmm")
+        del avoid_loop_save
 
-    # Check if any ghost in successor
-    def collide(self, ghosts_pos, pos):
-        eps = 0.9 # Create better effect for ghost colliding
-        for i in range(4):
-            if i != self.id:
-                if ghosts_pos[i][0] % 1.0 == 0 and ghosts_pos[i][1] % 1.0 == 0:
-                    if ghosts_pos[i][0] == pos[0] and ghosts_pos[i][1] == pos[1]:
-                        return ghosts_pos[i]
-        return []
+    # Get the next successor
+    def get_next_successor(self, _map, ghosts_pos, succ_list, pacman_pos):
+        # Only get new successor if the ghost is inside the block
+        if self.pos[0] % 1.0 == 0 and self.pos[1] % 1.0 == 0:
+            # Can update new path if pacman is inside block
+            if self.algo_upd_cnt == -1 or self.algo_upd_cnt == self.algo_upd_limit:
+                if pacman_pos[0] % 1.0 == 0 and pacman_pos[1] % 1.0 == 0:
+                    # print("Update path")
+                    self.update_path(_map, ghosts_pos, pacman_pos, succ_list)
+                    # self.update_collide_path(_map, ghosts_pos, succ_list, pacman_pos)
+                    return self.algo_path[self.algo_upd_cnt]
+            elif self.algo_upd_cnt < self.algo_upd_limit:
+                self.algo_upd_cnt += 1
+                # print("Next succ without update new path")
+                if in_succ_list(succ_list, self.id, self.algo_path[self.algo_upd_cnt]):
+                    self.update_path(_map, ghosts_pos, pacman_pos, succ_list)
+                    # print("Reupdate new path")
+                    # print(self.algo_path)
+                # self.update_collide_path(_map, ghosts_pos, succ_list, pacman_pos)
+                return self.algo_path[self.algo_upd_cnt]
+        # If not able to find next successor, return current successor to move or wait
+        return self.successor
 
+    # Move the ghost
+    def move(self, _map: Map, ghosts_pos, succ_list, pacman_pos):
+        # print("succ list", succ_list)    
+        self.successor = self.get_next_successor(_map, ghosts_pos, succ_list, pacman_pos)
+        self.update_pos()
+    
     # Check if eat pacman
     @staticmethod
     def eat_pacman(ghosts_pos, pacman_pos):
@@ -86,36 +116,6 @@ class Ghost(Characters):
             if math.fabs(ghosts_pos[i][0] - pacman_pos[0]) <= eps and math.fabs(ghosts_pos[i][1] - pacman_pos[1]) <= eps:
                 return True
         return False
-
-    # Get the next successor
-    def get_next_successor(self, _map, ghosts_pos, pacman_pos):
-        # Only get new successor if the ghost and pacman is inside the block
-        if self.pos[0] % 1.0 == 0 and self.pos[1] % 1.0 == 0 and pacman_pos[0] % 1.0 == 0 and pacman_pos[1] % 1.0 == 0:
-            # If it has finished path or pacman has moved differently 5 times => update algorithm
-            # Add pacman checking to efficiently update ghosts 
-            if self.algo_upd_cnt == -1 or self.algo_upd_cnt >= self.algo_upd_limit or self.pacman_changing == 5:
-                self.update_path(_map, ghosts_pos, pacman_pos)
-                self.update_collide_path(_map, ghosts_pos, pacman_pos)
-                return self.algo_path[self.algo_upd_cnt]
-            elif self.algo_upd_cnt < self.algo_upd_limit:
-                self.algo_upd_cnt += 1
-                self.update_collide_path(_map, ghosts_pos, pacman_pos)
-                return self.algo_path[self.algo_upd_cnt]
-        # If cannot move, ghost will wait (return current successor)
-        return self.successor
-
-    # Move the ghost
-    def move(self, _map: Map, ghosts_pos, pacman_pos):    
-        # Updating pacman check
-        if pacman_pos[0] % 1.0 == 0 and pacman_pos[1] % 1.0 == 0:
-            if self.pacman_prev_pos == [-1, -1]:
-                self.pacman_prev_pos = pacman_pos
-            else:
-                if self.pacman_prev_pos != pacman_pos:
-                    self.pacman_changing = (self.pacman_changing + 1) % 6
-                self.pacman_prev_pos = pacman_pos
-        self.successor = self.get_next_successor(_map, ghosts_pos, pacman_pos)
-        self.update_pos()
 
 class Pinky(Ghost):
     def __init__(self, _pos, _id, _algo_id):
