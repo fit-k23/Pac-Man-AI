@@ -89,11 +89,6 @@ def display_game():
     for i in range(0, 4):
         ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
     
-    # Display score
-    global last_score
-    global score_text
-    score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
-    screen.blit(score_text, score_pos)
     
     
 def display_final_game():
