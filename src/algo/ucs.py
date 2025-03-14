@@ -26,7 +26,6 @@ def ucs(mp, ghosts_pos, id, pacman_pos, succ_list):
     #     print("ucs ", forbid)
 
     found = False
-    cnt_loop = 0
     # print("Entering ucs")
     while pq.qsize() > 0:
         (cur_dist, cur_pos) = pq.get()
@@ -49,10 +48,7 @@ def ucs(mp, ghosts_pos, id, pacman_pos, succ_list):
                 dist[new_pos[0]][new_pos[1]] = cur_dist + 1
                 pq.put ( ( dist[new_pos[0]][new_pos[1]], new_pos ))
                 trace[new_pos[0]][new_pos[1]] = cur_pos
-        cnt_loop += 1
-        if cnt_loop >= 600:
-            print("ucs wrong")
-            break
+
     # print("Exit ucs")
     if not found:
         # print("ucs cannot reach destination")

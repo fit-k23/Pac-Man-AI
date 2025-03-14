@@ -18,7 +18,6 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], su
     found: bool = False
     _move_set_x = [0, 0, -1, 1]
     _move_set_y = [1, -1, 0, 0]
-    cnt_loop = 0
 
     while frontier and not found:
         current = frontier.pop()
@@ -33,10 +32,6 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], su
             if pacman_pos[0] == _mx and pacman_pos[1] == _my:
                 found = True
                 break
-        cnt_loop += 1
-        if cnt_loop >= 600:
-            print("dfs wrong")
-            break
 
     if not found:
         # print("ERROR: destination node is unreachable")

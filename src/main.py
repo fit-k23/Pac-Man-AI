@@ -51,7 +51,7 @@ text = smallfont.render('Quit' , True , "white")
 # Drawing stuff on screen
 def display_game():
     # Draw map
-    maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
+    # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
     maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
     maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 

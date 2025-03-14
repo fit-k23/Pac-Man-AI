@@ -18,9 +18,8 @@ def bfs(mp, ghosts_pos, id, pacman_pos, succ_list):
         trace.append([[-1, -1] for _ in range(33)])
 
     visited[int(start[0])][int(start[1])] = True
-    
+
     found = False
-    cnt_loop = 0
     while len(queue) > 0 and found == False:
         cur_pos = queue.popleft()
 
@@ -41,11 +40,6 @@ def bfs(mp, ghosts_pos, id, pacman_pos, succ_list):
             if new_pos == pacman_pos:
                 found = True
                 break
-
-        cnt_loop += 1
-        if cnt_loop >= 600:
-            print("bfs wrong")
-            break
 
     if not found:
         return [start]

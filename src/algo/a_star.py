@@ -23,7 +23,6 @@ def astar(mp, ghosts_pos, id, pacman_pos, succ_list):
 
     # if forbid:
     #     print("A* ", forbid)
-    cnt_loop = 0
 
     found = False
     while pq.qsize() > 0: 
@@ -53,10 +52,6 @@ def astar(mp, ghosts_pos, id, pacman_pos, succ_list):
                 pq.put((h + new_dist, new_dist, new_pos))
                 dist[new_pos[0]][new_pos[1]] = new_dist + h
                 trace[new_pos[0]][new_pos[1]] = cur[2]
-        cnt_loop += 1
-        if cnt_loop >= 100:
-            print("a* wrong")
-            break
     
     if not found:
         # print("A* cannot found destination")
