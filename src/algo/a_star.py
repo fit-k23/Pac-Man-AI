@@ -2,7 +2,7 @@ from queue import PriorityQueue
 from util import *
 from defs import *
 
-def astar(mp, ghosts_pos, id, pacman_pos):
+def astar(mp, ghosts_pos, id, pacman_pos, forbid = []):
     pq = PriorityQueue()  
     dist = []
     trace = [] # trace[x][y] = [pre_x, pre_y]
@@ -18,6 +18,10 @@ def astar(mp, ghosts_pos, id, pacman_pos):
     init = (get_heuristic(ghosts_pos[id], pacman_pos), 0, [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]) 
     pq.put(init)
     dist[int(ghosts_pos[id][0])][int(ghosts_pos[id][1])] = get_heuristic(ghosts_pos[id], pacman_pos)
+
+    if forbid:
+        print("A* ", forbid)
+
     while pq: 
         cur = pq.get()
         # print("cur = ", cur)
@@ -28,8 +32,12 @@ def astar(mp, ghosts_pos, id, pacman_pos):
             continue
         
         for i in range(4):
-            new_pos = [cur[2][0] + dx[i], cur[2][1] + dy[i]]
-            if can_go(new_pos, mp) == False:
+            random_successor = [0, 1, 2, 3]
+            # If there is a forbidden position, choose successor randomly to avoid cycle
+            if forbid != [] and cur[2] == [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]:
+                random.shuffle(random_successor)
+            new_pos = [cur[2][0] + dx[random_successor[i]], cur[2][1] + dy[random_successor[i]]]
+            if can_go(new_pos, mp) == False or (forbid != [] and new_pos == forbid):
                 continue
         
             h = get_heuristic(new_pos, pacman_pos)
@@ -46,22 +54,13 @@ def astar(mp, ghosts_pos, id, pacman_pos):
     path = []
     while temp != ghosts_pos[id]:
         succ = temp
+        path.append(succ)
         new_temp = trace[temp[0]][temp[1]]
         temp = new_temp
     
-    # If succ occupied by other ghost
-    occupied = False
-    for i in range(0, 4): 
-        if ghosts_pos[i] == succ:
-            occupied = True
-
-    if occupied:
-        for i in range(0, 4):
-            new_pos = [ghosts_pos[id][0] + dx[i], ghosts_pos[id][1] + dy[i]]
-            if can_go(new_pos, mp) and new_pos != succ:
-                path.append(new_pos)
-                return path
-        path.append(ghosts_pos[id])
-        return path
-    path.append(succ)
+    path.reverse()
+    
+    del dist[:]
+    del trace[:]
+    
     return path

@@ -106,7 +106,6 @@ def display_final_game():
         pacman.update_animation()
         image = pygame.transform.scale(image, (40, 40))
         screen.blit(image, (button_x, (BLOCK_H * 1.5)))
-    
         
         pygame.display.flip()
         clock.tick(100)    
@@ -121,7 +120,7 @@ def update_delay():
 
 # Update after delay time for smoother movement
 def update_character():
-    delay_to_update = 3
+    delay_to_update = 2
     if pacman.delay == delay_to_update:
         pacman.move(maze, food_pos)
         pacman.delay = 0
@@ -133,58 +132,56 @@ def update_character():
 font_size = 36
 font = pygame.font.Font(None, font_size)
 
-while game:
-    while running:
-        # Update delay for character's update
-        update_delay()
+while running:
+    # Update delay for character's update
+    update_delay()
 
-        # Maintaining ghost positions into array ghosts_pos[]
-        for i in range(0, 4):
-            ghosts_pos[i] = ghosts[i].pos
+    # Maintaining ghost positions into array ghosts_pos[]
+    for i in range(0, 4):
+        ghosts_pos[i] = ghosts[i].pos
 
-        # poll for events
-        # print(pygame.event.get())
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w or event.key == pygame.K_UP:
-                    pacman.last_request = 0
-                elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
-                    pacman.last_request = 1
-                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
-                    pacman.last_request = 2
-                elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-                    pacman.last_request = 3
-                else:
-                    pacman.last_request = -1
-
-        # fill the screen with a color to wipe away anything from last frame
-        screen.fill("black")
-
-        # Draw game onto screen
-        display_game()
-        
-        # Update character's movement
-        update_character()
-
-        fps = int(clock.get_fps())  # Convert to integer for clean display
-
-        # Render FPS text
-        fps_text = font.render(f"FPS: {fps}", True, (255, 255, 255))  # White color
-        screen.blit(fps_text, (SCREEN_WIDTH - 100, SCREEN_HEIGHT - font_size))
-
-        # Check if pacman is eaten by ghosts
-        if Ghost.eat_pacman(ghosts_pos, pacman.pos):
+    # poll for events
+    # print(pygame.event.get())
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w or event.key == pygame.K_UP:
+                pacman.last_request = 0
+            elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                pacman.last_request = 1
+            elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                pacman.last_request = 2
+            elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                pacman.last_request = 3
+            else:
+                pacman.last_request = -1
 
-        # flip() the display to put your work on screen
-        pygame.display.flip()
-        clock.tick(100)
+    # fill the screen with a color to wipe away anything from last frame
+    screen.fill("black")
+
+    # Draw game onto screen
+    display_game()
     
-    display_final_game()
+    # Update character's movement
+    update_character()
+
+    fps = int(clock.get_fps())  # Convert to integer for clean display
+
+    # Render FPS text
+    fps_text = font.render(f"FPS: {fps}", True, (255, 255, 255))  # White color
+    screen.blit(fps_text, (SCREEN_WIDTH - 100, SCREEN_HEIGHT - font_size))
+
+    # Check if pacman is eaten by ghosts
+    if Ghost.eat_pacman(ghosts_pos, pacman.pos):
+        running = False
+        display_final_game()
+        break
+
+    # flip() the display to put your work on screen
+    pygame.display.flip()
+    clock.tick(70)
     
-    break
 pygame.quit()
 
     

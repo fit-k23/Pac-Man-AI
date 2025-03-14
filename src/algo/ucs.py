@@ -2,7 +2,7 @@ from queue import PriorityQueue
 from util import *
 from defs import *
 
-def ucs(mp, ghosts_pos, id, pacman_pos):
+def ucs(mp, ghosts_pos, id, pacman_pos, forbid = []):
     # Initialize priority queue and dist array
     pq = PriorityQueue()
     dist = []
@@ -16,9 +16,15 @@ def ucs(mp, ghosts_pos, id, pacman_pos):
         dist.append(col)
         trace.append(trace_col)
 
+    start = [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]
+
     # Push the initial position to queue
-    pq.put( ( 0, [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])] ) )
+    pq.put( ( 0, start ) )
     dist[int(ghosts_pos[id][0])][int(ghosts_pos[id][1])] = 0
+
+    if forbid:
+        print("ucs ", forbid)
+
     while pq:
         (cur_dist, cur_pos) = pq.get()
         
@@ -32,8 +38,12 @@ def ucs(mp, ghosts_pos, id, pacman_pos):
 
         # Check 4 successors
         for i in range(0, 4):
-            new_pos = [cur_pos[0] + dx[i], cur_pos[1] + dy[i]]
-            if not can_go(new_pos, mp):
+            random_successor = [0, 1, 2, 3]
+            # If there is a forbidden position, choose successor randomly to avoid cycle
+            if forbid != [] and cur_pos == start:
+                random.shuffle(random_successor)
+            new_pos = [cur_pos[0] + dx[random_successor[i]], cur_pos[1] + dy[random_successor[i]]]
+            if not can_go(new_pos, mp) or (forbid != [] and new_pos == forbid):
                 continue
             if dist[new_pos[0]][new_pos[1]] > cur_dist + 1:
                 dist[new_pos[0]][new_pos[1]] = cur_dist + 1
@@ -46,22 +56,12 @@ def ucs(mp, ghosts_pos, id, pacman_pos):
     path = []
     while temp != ghosts_pos[id]:
         succ = temp
+        path.append(succ)
         new_temp = trace[temp[0]][temp[1]]
         temp = new_temp
-    
-    # If succ occupied by other ghost
-    occupied = False
-    for i in range(0, 4): 
-        if ghosts_pos[i] == succ:
-            occupied = True
+    path.reverse()
 
-    if occupied:
-        for i in range(0, 4):
-            new_pos = [ghosts_pos[id][0] + dx[i], ghosts_pos[id][1] + dy[i]]
-            if can_go(new_pos, mp) and new_pos != succ:
-                path.append(new_pos)
-                return path
-        path.append(ghosts_pos[id])
-        return path
-    path.append(succ)
+    del dist[:]
+    del trace[:]
+
     return path

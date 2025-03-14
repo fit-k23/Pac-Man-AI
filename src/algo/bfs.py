@@ -20,6 +20,7 @@ def bfs(mp, ghosts_pos, id, pacman_pos, forbid = []):
     visited[int(start[0])][int(start[1])] = True
     if forbid != []:
         visited[int(forbid[0])][int(forbid[1])] = True
+        print("bfs ", forbid)
 
     found = False
     while len(queue) > 0 and found == False:
@@ -30,7 +31,7 @@ def bfs(mp, ghosts_pos, id, pacman_pos, forbid = []):
 
         rdom_succ = [0, 1, 2, 3]
         # If there is a forbidden position, choose successor randomly to avoid cycle
-        if forbid != []:
+        if forbid != [] and cur_pos == start:
             random.shuffle(rdom_succ)
         
         for i in range(4):
@@ -56,4 +57,8 @@ def bfs(mp, ghosts_pos, id, pacman_pos, forbid = []):
         temp = new_temp
 
     path.reverse()
+
+    del queue[:]
+    del trace[:]
+
     return path

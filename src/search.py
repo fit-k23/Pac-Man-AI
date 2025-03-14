@@ -21,6 +21,6 @@ class Search:
             case 1:
                 return dfs(_map, ghosts_pos, id, pacman_pos, forbid)
             case 2:
-                return ucs(_map, ghosts_pos, id, pacman_pos)
+                return ucs(_map, ghosts_pos, id, pacman_pos, forbid)
             case 3:
-                return astar(_map, ghosts_pos, id, pacman_pos)
+                return astar(_map, ghosts_pos, id, pacman_pos, forbid)

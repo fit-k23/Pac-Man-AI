@@ -16,7 +16,8 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
     visited[start[0]][start[1]] = [-1, -1]
 
     if forbid:
-        visited[int(forbid[0])][int(forbid[1])] = [-1, -1]
+        visited[int(forbid[0])][int(forbid[1])] = [-1, -1]  
+        print("dfs ", forbid)
 
     # up, down, left, right
     # 0 1 2 3
@@ -54,4 +55,8 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], fo
         current = visited[current[0]][current[1]]
 
     trace_path.reverse()
+
+    del frontier[:]
+    del visited[:]
+
     return trace_path

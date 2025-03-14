@@ -51,27 +51,31 @@ class Ghost(Characters):
     # Update the new path for ghost
     def update_path(self, _map, ghosts_pos, pacman_pos, forbid = []):
         self.algo_path = Search.get_path(self.algo_id, _map, ghosts_pos, self.id, pacman_pos, forbid)
-        self.algo_upd_limit = len(self.algo_path) - 1
+        if 1 <= self.id <= 2:
+            self.algo_upd_limit = len(self.algo_path) - 1
+        else:
+            self.algo_upd_limit = len(self.algo_path) // 2
         self.algo_upd_cnt = 0
 
     # If another ghost is in the successor, re-update the path with the forbidden successor
     # Only apply to dfs and bfs, A* and UCS avoid ghost-colliding before return successor
     def update_collide_path(self, _map, ghosts_pos, pacman_pos):
-        if 1 <= self.id <= 2:
-            while True:
-                collide_pos = self.collide(ghosts_pos, self.algo_path[self.algo_upd_cnt])
-                if not collide_pos:
-                    break
-                # Pass collide successor to enable randomly chosen successor
-                self.update_path(_map, ghosts_pos, pacman_pos, collide_pos)
+        while True:
+            collide_pos = self.collide(ghosts_pos, self.algo_path[self.algo_upd_cnt])
+            if not collide_pos:
+                break
+            # Pass collide successor to enable randomly chosen successor
+            self.update_path(_map, ghosts_pos, pacman_pos, collide_pos)
+            print("hmm")
 
     # Check if any ghost in successor
     def collide(self, ghosts_pos, pos):
         eps = 0.9 # Create better effect for ghost colliding
         for i in range(4):
             if i != self.id:
-                if math.fabs(ghosts_pos[i][0] - pos[0]) <= eps and math.fabs(ghosts_pos[i][1] - pos[1]) <= eps:
-                    return ghosts_pos[i]
+                if ghosts_pos[i][0] % 1.0 == 0 and ghosts_pos[i][1] % 1.0 == 0:
+                    if ghosts_pos[i][0] == pos[0] and ghosts_pos[i][1] == pos[1]:
+                        return ghosts_pos[i]
         return []
 
     # Check if eat pacman
