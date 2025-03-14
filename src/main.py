@@ -42,11 +42,16 @@ ghosts[3].load_textures([get_file_absolute_path("../asset/ghost/2.png")])
 
 # Text
 last_score = -1
-score_font = pygame.font.SysFont('Times New Roman', 30)
-score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
-score_pos = (32 * BLOCK_W, 5 * BLOCK_H)
-smallfont = pygame.font.SysFont('Corbel',35)
-text = smallfont.render('Quit' , True , "white")
+font_path = os.path.abspath(get_file_absolute_path("../asset/font/8-BIT WONDER.TTF"))
+smallfont = pygame.font.Font(font_path, 35)
+bigfont = pygame.font.Font(font_path, 60)
+
+Sys_font = pygame.font.SysFont(None, 35)
+score_text = smallfont.render('Score: ' + str(pacman.score), False, WHITE)
+score_pos1 = (32 * BLOCK_W - 3, 6 * BLOCK_H)
+score_pos2 = (32 * BLOCK_W - 8, 6 * BLOCK_H + 5)
+
+text = Sys_font.render('Quit' , True , "white")
 
 # Drawing stuff on screen
 def display_game():
@@ -56,9 +61,30 @@ def display_game():
     maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 
     # Draw map border
-    pygame.draw.rect(screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2)
+    pygame.draw.rect(screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2, 8)
+    
+    mp = pygame.image.load(get_file_absolute_path(f"../asset/background/mini_pacman.png"))
+    sb = pygame.image.load(get_file_absolute_path(f"../asset/background/board_game.png"))
+    bb = pygame.image.load(get_file_absolute_path(f"../asset/background/board_game2.png"))
+    
+    sb = pygame.transform.scale(sb, (230, 39.2))
+    mp = pygame.transform.scale(mp, (180, 27.1))
+    bb = pygame.transform.scale(bb, (10 * BLOCK_W - 8, 440))
+    
+    screen.blit(sb, (30 * BLOCK_W + 7, 30))
+    screen.blit(mp, (30 * BLOCK_W + 32, 70))
 
+   
+    pygame.draw.rect(screen, PURPLE, pygame.Rect(30 * BLOCK_W + 5, 0, 10 * BLOCK_W - 8, 10 * BLOCK_H + 20), 2, border_radius = 8)
+    screen.blit(bb, (30 * BLOCK_W + 5, 12 * BLOCK_H - 8))
+    
     # Draw characters
+    score_text1 = bigfont.render(str(pacman.score).zfill(3), False, WHITE)
+    score_text2 = bigfont.render(str(pacman.score).zfill(3), False, blue_light)
+    
+    screen.blit(score_text2, score_pos2)
+    screen.blit(score_text1, score_pos1)
+    
     pacman.draw(screen, BLOCK_W, BLOCK_H)
     for i in range(0, 4):
         ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
@@ -82,18 +108,18 @@ def display_final_game():
         
         if button_x <= mouse[0] <= button_x + BUTTON_W and button_y <= mouse[1] <= button_y + BUTTON_H: 
             rect = pygame.Rect(button_x, button_y, BUTTON_W, BUTTON_H)
-            pygame.draw.rect(screen, blue_dark, rect, border_radius=6)
-            pygame.draw.rect(screen, color_dark, rect, 3, 6)
+            pygame.draw.rect(screen, blue_light, rect, border_radius = 20)
+            pygame.draw.rect(screen, color_dark, rect, 3, 20)
         else:
             rect = pygame.Rect(button_x, button_y, BUTTON_W, BUTTON_H)
-            pygame.draw.rect(screen, color_light, rect, border_radius=6)
-            pygame.draw.rect(screen, color_dark, rect, 3, 6)
+            pygame.draw.rect(screen, color_light, rect, border_radius = 20)
+            pygame.draw.rect(screen, color_dark, rect, 3, 20)
         
         screen.blit(text, (BLOCK_W * (GRID_W / 2 - 1.1), BLOCK_H * (GRID_H / 2 + 10.7)))
     
     
         #Write score
-        score_text = smallfont.render('Score: ' + str(pacman.score), False, YELLOW)
+        score_text = Sys_font.render('Score: ' + str(pacman.score), False, YELLOW)
         screen.blit(score_text, ((button_x + 2 * BLOCK_W), (BLOCK_H * 2)))
         
         # draw pacman
@@ -109,16 +135,16 @@ def show_start_menu():
     menu_image = pygame.image.load(get_file_absolute_path(f"../asset/background/game_start.png"))
     menu_image = pygame.transform.scale(menu_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
     button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2+75, 200, 60)
-    button_text = font.render("START", True, WHITE)
+    button_text = font.render("Start", True, WHITE)
     button_rect2 = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 150, 200, 60)
-    button_text2 = font.render("QUIT", True, WHITE)
+    button_text2 = font.render("Quit", True, WHITE)
 
     running = True
     while running:
         mouse = pygame.mouse.get_pos()
         screen.blit(menu_image, (0, 0))
         if button_rect.x <= mouse[0] <= button_rect.x + 200 and button_rect.y <= mouse[1] <= button_rect.y+60:
-            pygame.draw.rect(screen, blue_dark, button_rect, border_radius=10)
+            pygame.draw.rect(screen, blue_light, button_rect, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
             screen.blit(button_text, (button_rect.x + 65, button_rect.y + 15))
         else:
@@ -126,7 +152,7 @@ def show_start_menu():
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
             screen.blit(button_text, (button_rect.x + 65, button_rect.y + 15))
         if button_rect2.x <= mouse[0] <= button_rect2.x + 200 and button_rect2.y <= mouse[1] <= button_rect2.y+60:
-            pygame.draw.rect(screen, blue_dark, button_rect2, border_radius=10)
+            pygame.draw.rect(screen, blue_light, button_rect2, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
             screen.blit(button_text2, (button_rect2.x + 72, button_rect2.y + 15))
         else:
@@ -221,7 +247,7 @@ while running:
     screen.blit(fps_text, (SCREEN_WIDTH - 100, SCREEN_HEIGHT - font_size))
 
     # Check if pacman is eaten by ghosts
-    if Ghost.eat_pacman(ghosts_pos, pacman.pos):
+    if Ghost.eat_pacman(ghosts_pos, pacman.pos) or not food_pos:
         running = False
         display_final_game()
         break

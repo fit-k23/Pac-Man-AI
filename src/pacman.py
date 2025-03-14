@@ -66,6 +66,6 @@ class Pacman(Characters):
                 self.prev_pos = self.pos
                 self.pos[0] += self.velocity
 
-        if mp.erase_food(food_pos, self.pos[1], self.pos[0]):
+        if mp.erase_food(food_pos, int(self.pos[1]), int(self.pos[0])):
             self.score += 1
         
