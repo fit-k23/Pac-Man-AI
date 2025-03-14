@@ -57,7 +57,7 @@ class Ghost(Characters):
         self.algo_upd_limit = len(self.algo_path) - 1
 
     def pacman_far_enough(self, pacman_pos):
-        if self.pacman_pre_upd != [-1, -1] and abs(pacman_pos[0] - self.pacman_pre_upd[0]) + abs(pacman_pos[1] - self.pacman_pre_upd[1]) == 4:
+        if self.pacman_pre_upd != [-1, -1] and abs(pacman_pos[0] - self.pacman_pre_upd[0]) + abs(pacman_pos[1] - self.pacman_pre_upd[1]) == 5:
             return True
         return False
 

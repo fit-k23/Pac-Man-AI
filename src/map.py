@@ -12,10 +12,16 @@ class Map:
     @staticmethod
     def parse(file_path: str):
         _map = Map()
+        data_str = []
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f.readlines():
                 r_line = line.strip('\n').replace(" ", "")
-                _map.data.append(r_line)
+                data_str.append(r_line)
+        for i in range(len(data_str)):
+            dat = []
+            for j in range(len(data_str[i])):
+                dat.append(data_str[i][j])
+            _map.data.append(dat)
         return _map
 
     def draw_grid(self, screen, screen_width, screen_height, block_width, block_height):
@@ -74,6 +80,13 @@ class Map:
                     start_pos = (x, y + block_height / 2)
                     end_pos = (x + block_width, y + block_height / 2)
                     pygame.draw.line(screen, BLUE, start_pos, end_pos, THICKNESS)
+                # 0: food
+                elif self.data[i][j] == '1':
+                    x = j * block_width
+                    y = i * block_height
+                    centerPos = (x + block_width / 2, y + block_height / 2)
+                    radius = block_width / 4
+                    pygame.draw.circle(screen, YELLOW, centerPos, radius)
 
 
     def draw_food(self, screen, block_width, block_height, food_pos):
@@ -85,8 +98,8 @@ class Map:
             pygame.draw.circle(screen, YELLOW, centerPos, radius)
 
     def erase_food(self, food_pos, x, y):
-        if (x, y) in food_pos:
-            food_pos.remove((x, y))
+        if self.data[int(x)][int(y)] == '1':
+            self.data[int(x)][int(y)] = '0'
             return True
         return False
 

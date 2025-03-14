@@ -58,7 +58,7 @@ def display_game():
     # Draw map
     # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
     maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
-    maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
+    # maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 
     # Draw map border
     pygame.draw.rect(screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2, 8)
@@ -88,6 +88,12 @@ def display_game():
     pacman.draw(screen, BLOCK_W, BLOCK_H)
     for i in range(0, 4):
         ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
+    
+    # Display score
+    global last_score
+    global score_text
+    score_text = score_font.render('Score: ' + str(pacman.score), False, WHITE)
+    screen.blit(score_text, score_pos)
     
     
 def display_final_game():
@@ -207,13 +213,10 @@ while running:
     for i in range(0, 4):
         ghosts_pos[i] = ghosts[i].pos
 
-    # for i in range(4):
-    #     for j in range(i + 1, 4):
-    #         if ghosts_pos[i] == ghosts_pos[j]:
-    #             print(i, j, ghosts_pos[i], succ_list[i], ghosts_pos[j], succ_list[j])
-    # for i in range(4):
-    #     print(ghosts_pos[i], succ_list[i], end = " ")
-    # print()
+    for i in range(4):
+        for j in range(i + 1, 4):
+            if ghosts_pos[i] == ghosts_pos[j]:
+                print(i, j, ghosts_pos[i], succ_list[i], ghosts_pos[j], succ_list[j])
 
     # poll for events
     for event in pygame.event.get():
