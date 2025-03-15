@@ -36,7 +36,7 @@ for i in range(4):
 
 # Load character's textures
 pacman.load_textures([get_file_absolute_path(f"../asset/pacman/pacman_{i}.png") for i in range(1, 9)])
-ghosts[0].load_textures([get_file_absolute_path(f"../asset/ghost/4.png")])
+ghosts[0].load_textures([get_file_absolute_path("../asset/ghost/4.png")])
 ghosts[1].load_textures([get_file_absolute_path("../asset/ghost/3.png")])
 ghosts[2].load_textures([get_file_absolute_path("../asset/ghost/1.png")])
 ghosts[3].load_textures([get_file_absolute_path("../asset/ghost/2.png")])
@@ -78,34 +78,34 @@ class EndScreen(GameState):
                 if button_rect3.collidepoint(ev.pos):
                   game_manage.running = False
 
-    def draw(self, screen):
+    def draw(self, _screen):
         bg = pygame.image.load(get_file_absolute_path("../asset/background/game_over.png"))
-        screen.blit(bg, (0, 0))
+        _screen.blit(bg, (0, 0))
 
 
         #Write score
         score_text = sys_font.render('Score: ' + str(pacman.score), False, YELLOW)
-        screen.blit(score_text, ((button_x + 2 * BLOCK_W), (BLOCK_H * 2)))
+        _screen.blit(score_text, ((button_x + 2 * BLOCK_W), (BLOCK_H * 2)))
 
         # draw pacman
         image = pacman.textures[pacman.get_texture_index()]
         pacman.update_animation()
         image = pygame.transform.scale(image, (40, 40))
-        screen.blit(image, (button_x, (BLOCK_H * 1.5)))
+        _screen.blit(image, (button_x, (BLOCK_H * 1.5)))
 
         mouse = pygame.mouse.get_pos()
 
         if button_x <= mouse[0] <= button_x + BUTTON_W and button_y <= mouse[1] <= button_y + BUTTON_H:
-            pygame.draw.rect(screen, BLUE_LIGHT, button_rect3, border_radius = 20)
-            pygame.draw.rect(screen, color_dark, button_rect3, 3, 20)
+            pygame.draw.rect(_screen, BLUE_LIGHT, button_rect3, border_radius = 20)
+            pygame.draw.rect(_screen, color_dark, button_rect3, 3, 20)
         else:
-            pygame.draw.rect(screen, RASPBERRY_PINK, button_rect3, border_radius = 20)
-            pygame.draw.rect(screen, color_dark, button_rect3, 3, 20)
+            pygame.draw.rect(_screen, RASPBERRY_PINK, button_rect3, border_radius = 20)
+            pygame.draw.rect(_screen, color_dark, button_rect3, 3, 20)
 
-        screen.blit(text, (BLOCK_W * (GRID_W / 2 - 1.1), BLOCK_H * (GRID_H / 2 + 10.7)))
+        _screen.blit(text, (BLOCK_W * (GRID_W / 2 - 1.1), BLOCK_H * (GRID_H / 2 + 10.7)))
 
 
-menu_image = pygame.image.load(get_file_absolute_path(f"../asset/background/game_start.png"))
+menu_image = pygame.image.load(get_file_absolute_path("../asset/background/game_start.png"))
 menu_image = pygame.transform.scale(menu_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 def mouse_over_button(_button_rect, _mouse_pos) -> bool:
@@ -133,16 +133,11 @@ class StartScreen(GameState):
     def draw(self, _screen):
         mouse = pygame.mouse.get_pos()
         _screen.blit(menu_image, (0, 0))
-        if mouse_over_button(button_rect, mouse):
-            pygame.draw.rect(_screen, BLUE_LIGHT, button_rect, border_radius=10)
-        else:
-            pygame.draw.rect(_screen, RASPBERRY_PINK, button_rect, border_radius=10)
+        pygame.draw.rect(_screen, BLUE_LIGHT if mouse_over_button(button_rect, mouse) else RASPBERRY_PINK, button_rect, border_radius=10)
         pygame.draw.rect(_screen, color_dark, button_rect, 3, 10)
         _screen.blit(button_text, (BLOCK_W * (GRID_W / 2 - 1.1), button_rect.y + 15))
-        if mouse_over_button(button_rect2, mouse):
-            pygame.draw.rect(_screen, BLUE_LIGHT, button_rect2, border_radius=10)
-        else:
-            pygame.draw.rect(_screen, RASPBERRY_PINK, button_rect2, border_radius=10)
+
+        pygame.draw.rect(_screen, BLUE_LIGHT if mouse_over_button(button_rect2, mouse) else RASPBERRY_PINK, button_rect2, border_radius=10)
         pygame.draw.rect(_screen, color_dark, button_rect2, 3, 10)
         _screen.blit(button_text2, (BLOCK_W * (GRID_W / 2 - 1.1), button_rect2.y + 15))
 
@@ -215,9 +210,9 @@ class GameScreen(GameState):
         # Draw map border
         pygame.draw.rect(_screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2, 8)
 
-        mp = pygame.image.load(get_file_absolute_path(f"../asset/background/mini_pacman.png"))
-        sb = pygame.image.load(get_file_absolute_path(f"../asset/background/board_game.png"))
-        bb = pygame.image.load(get_file_absolute_path(f"../asset/background/board_game2.png"))
+        mp = pygame.image.load(get_file_absolute_path("../asset/background/mini_pacman.png"))
+        sb = pygame.image.load(get_file_absolute_path("../asset/background/board_game.png"))
+        bb = pygame.image.load(get_file_absolute_path("../asset/background/board_game2.png"))
 
         sb = pygame.transform.scale(sb, (230, 39.2))
         mp = pygame.transform.scale(mp, (180, 27.1))

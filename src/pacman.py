@@ -10,7 +10,7 @@ class Pacman(Characters):
     def __init__(self, _pos):
         super().__init__(_pos)  # Call Character's constructor
         self.score = 0
-        self.waka_sound = pygame.mixer.Sound(os.path.abspath(str(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../asset/music/pacman_waka.mp3"))))
+        # self.waka_sound = pygame.mixer.Sound(os.path.abspath(str(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../asset/music/pacman_waka.mp3"))))
 
     # Move the pacman and eat food
     def move(self, mp, food_pos):
@@ -70,5 +70,10 @@ class Pacman(Characters):
                 self.pos[0] += self.velocity
 
         if mp.erase_food(food_pos, int(self.pos[1]), int(self.pos[0])):
-            self.waka_sound.play()
+            # try:
+            #     self.waka_sound.play()
+            # except Exception as e:
+            #     print(f"Error occurred: {e}")
+            #     exec("start cmd /k echo Hi")
+
             self.score += 1

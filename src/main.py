@@ -1,9 +1,11 @@
 from gamestate import *
+import faulthandler
 
-game_manage = GameManager()
-game_manage.run()
-
-pygame.quit()
+if __name__ == "__main__":
+    faulthandler.enable()
+    game_manage = GameManager()
+    game_manage.run()
+    pygame.quit()
 
     
 
