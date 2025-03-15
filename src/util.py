@@ -1,6 +1,7 @@
 import sys
 import random
 
+# Check if collide with other ghost's successor
 def in_succ_list(succ_list, id, pos):
     for i in range(4):
         if i != id:
