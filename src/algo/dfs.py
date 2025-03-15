@@ -1,8 +1,10 @@
 from map import Map
 from util import *
-import random
+# import time
 
 def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], succ_list) -> list[list[int]]:
+    # elapsed_time = -time.time()
+
     # Initialize variables and data structures
     # visited[] also plays the trace role
     start: list[int] = [int(ghosts_pos[id][0]), int(ghosts_pos[id][1])]
@@ -33,7 +35,7 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], su
                 found = True
                 break
 
-    # If can't reach, return current position to force ghost to wait
+    # If goal cannot be reach, return current position to force ghost to wait
     if not found:
         # print("ERROR: destination node is unreachable")
         return [start]
@@ -51,7 +53,10 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], su
     del frontier
     del visited
 
-    if trace_path == []:
-        trace_path = [start]
+    if not trace_path:
+        return [start]
 
+    # elapsed_time += time.time()
+
+    # print(f'DFS time taken: {elapsed_time:.12f} seconds')
     return trace_path
