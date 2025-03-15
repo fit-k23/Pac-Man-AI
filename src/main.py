@@ -147,11 +147,11 @@ def show_start_menu():
         if button_rect.x <= mouse[0] <= button_rect.x + 200 and button_rect.y <= mouse[1] <= button_rect.y+60:
             pygame.draw.rect(screen, blue_light, button_rect, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
-            screen.blit(button_text, (button_rect.x + 65, button_rect.y + 15))
+            screen.blit(button_text, (button_rect.x + 70, button_rect.y + 15))
         else:
             pygame.draw.rect(screen, color_light, button_rect, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
-            screen.blit(button_text, (button_rect.x + 65, button_rect.y + 15))
+            screen.blit(button_text, (button_rect.x + 70, button_rect.y + 15))
         if button_rect2.x <= mouse[0] <= button_rect2.x + 200 and button_rect2.y <= mouse[1] <= button_rect2.y+60:
             pygame.draw.rect(screen, blue_light, button_rect2, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
