@@ -41,8 +41,10 @@ class Ghost(Characters):
         if self.successor is None:
             return
         if self.pos[0] < self.successor[0]:
+            self.dir = 3
             self.pos[0] += self.velocity
         elif self.pos[0] > self.successor[0]:
+            self.dir = 2
             self.pos[0] -= self.velocity
         elif self.pos[1] < self.successor[1]:
             self.pos[1] += self.velocity
