@@ -20,7 +20,7 @@ class Characters:
         self.velocity = 1 / 4
 
         self.textures = []
-        self.__texture_index = -1
+        self.texture_index = -1
         self.__last_update = pygame.time.get_ticks()
         self.__animation_speed = 50
         

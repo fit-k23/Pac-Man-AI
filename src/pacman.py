@@ -2,12 +2,15 @@ from map import *
 from character import *
 from defs import *
 
+import os
+
 # Direction: 0 - up, 1 - down, 2 - left, 3 - right
 class Pacman(Characters):
     score = 0
     def __init__(self, _pos):
         super().__init__(_pos)  # Call Character's constructor
         self.score = 0
+        self.waka_sound = pygame.mixer.Sound(os.path.abspath(str(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../asset/music/pacman_waka.mp3"))))
 
     # Move the pacman and eat food
     def move(self, mp, food_pos):
@@ -67,5 +70,5 @@ class Pacman(Characters):
                 self.pos[0] += self.velocity
 
         if mp.erase_food(food_pos, int(self.pos[1]), int(self.pos[0])):
+            self.waka_sound.play()
             self.score += 1
-        

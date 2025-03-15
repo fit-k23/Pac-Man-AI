@@ -79,7 +79,7 @@ class EndScreen(GameState):
                   game_manage.running = False
 
     def draw(self, screen):
-        bg = pygame.image.load(get_file_absolute_path(f"../asset/background/game_over.png"))
+        bg = pygame.image.load(get_file_absolute_path("../asset/background/game_over.png"))
         screen.blit(bg, (0, 0))
 
 
@@ -112,6 +112,10 @@ def mouse_over_button(_button_rect, _mouse_pos) -> bool:
     return _button_rect.x <= _mouse_pos[0] <= _button_rect.x + 200 and _button_rect.y <= _mouse_pos[1] <= _button_rect.y + 60
 
 class StartScreen(GameState):
+    def __init__(self):
+        pygame.mixer.music.load(get_file_absolute_path("../asset/music/pacman_ost.mp3"))
+        pygame.mixer.music.play()
+
     def handle_event(self, game_manage):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -123,23 +127,24 @@ class StartScreen(GameState):
                     exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_rect.collidepoint(event.pos):
+                    pygame.mixer.music.fadeout(500)
                     game_manage.change_state(GameScreen())
 
-    def draw(self, screen):
+    def draw(self, _screen):
         mouse = pygame.mouse.get_pos()
-        screen.blit(menu_image, (0, 0))
+        _screen.blit(menu_image, (0, 0))
         if mouse_over_button(button_rect, mouse):
-            pygame.draw.rect(screen, BLUE_LIGHT, button_rect, border_radius=10)
+            pygame.draw.rect(_screen, BLUE_LIGHT, button_rect, border_radius=10)
         else:
-            pygame.draw.rect(screen, RASPBERRY_PINK, button_rect, border_radius=10)
-        pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
-        screen.blit(button_text, (BLOCK_W * (GRID_W / 2 - 1.1), button_rect.y + 15))
+            pygame.draw.rect(_screen, RASPBERRY_PINK, button_rect, border_radius=10)
+        pygame.draw.rect(_screen, color_dark, button_rect, 3, 10)
+        _screen.blit(button_text, (BLOCK_W * (GRID_W / 2 - 1.1), button_rect.y + 15))
         if mouse_over_button(button_rect2, mouse):
-            pygame.draw.rect(screen, BLUE_LIGHT, button_rect2, border_radius=10)
+            pygame.draw.rect(_screen, BLUE_LIGHT, button_rect2, border_radius=10)
         else:
-            pygame.draw.rect(screen, RASPBERRY_PINK, button_rect2, border_radius=10)
-        pygame.draw.rect(screen, color_dark, button_rect2, 3, 10)
-        screen.blit(button_text2, (BLOCK_W * (GRID_W / 2 - 1.1), button_rect2.y + 15))
+            pygame.draw.rect(_screen, RASPBERRY_PINK, button_rect2, border_radius=10)
+        pygame.draw.rect(_screen, color_dark, button_rect2, 3, 10)
+        _screen.blit(button_text2, (BLOCK_W * (GRID_W / 2 - 1.1), button_rect2.y + 15))
 
         pygame.display.update()
 
@@ -175,16 +180,17 @@ class GameScreen(GameState):
                 pygame.quit()
                 exit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w or event.key == pygame.K_UP:
-                    pacman.last_request = 0
-                elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
-                    pacman.last_request = 1
-                elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
-                    pacman.last_request = 2
-                elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-                    pacman.last_request = 3
-                else:
-                    pacman.last_request = -1
+                match event.key:
+                    case pygame.K_w | pygame.K_UP:
+                        pacman.last_request = 0
+                    case pygame.K_s | pygame.K_DOWN:
+                        pacman.last_request = 1
+                    case pygame.K_a | pygame.K_LEFT:
+                        pacman.last_request = 2
+                    case pygame.K_d | pygame.K_RIGHT:
+                        pacman.last_request = 3
+                    case _:
+                        pacman.last_request = -1
 
         if Ghost.eat_pacman(ghosts_pos, pacman.pos) or not food_pos:
             game_manage.change_state(EndScreen())
@@ -199,15 +205,15 @@ class GameScreen(GameState):
 
         update_character()
 
-    def draw(self, screen):
-        screen.fill("black")
+    def draw(self, _screen):
+        _screen.fill("black")
+        # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
         # Draw map
-    # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
-        maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
+        maze.draw_map(_screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
         # maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 
         # Draw map border
-        pygame.draw.rect(screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2, 8)
+        pygame.draw.rect(_screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2, 8)
 
         mp = pygame.image.load(get_file_absolute_path(f"../asset/background/mini_pacman.png"))
         sb = pygame.image.load(get_file_absolute_path(f"../asset/background/board_game.png"))
@@ -217,31 +223,31 @@ class GameScreen(GameState):
         mp = pygame.transform.scale(mp, (180, 27.1))
         bb = pygame.transform.scale(bb, (10 * BLOCK_W - 8, 440))
 
-        screen.blit(sb, (30 * BLOCK_W + 7, 30))
-        screen.blit(mp, (30 * BLOCK_W + 32, 70))
+        _screen.blit(sb, (30 * BLOCK_W + 7, 30))
+        _screen.blit(mp, (30 * BLOCK_W + 32, 70))
 
 
-        pygame.draw.rect(screen, PURPLE, pygame.Rect(30 * BLOCK_W + 5, 0, 10 * BLOCK_W - 8, 10 * BLOCK_H + 20), 2, border_radius = 8)
-        screen.blit(bb, (30 * BLOCK_W + 5, 12 * BLOCK_H - 8))
+        pygame.draw.rect(_screen, PURPLE, pygame.Rect(30 * BLOCK_W + 5, 0, 10 * BLOCK_W - 8, 10 * BLOCK_H + 20), 2, border_radius = 8)
+        _screen.blit(bb, (30 * BLOCK_W + 5, 12 * BLOCK_H - 8))
 
         # Draw characters
         score_text1 = big_font.render(str(pacman.score).zfill(3), False, WHITE)
         score_text2 = big_font.render(str(pacman.score).zfill(3), False, BLUE_LIGHT)
 
-        screen.blit(score_text2, score_pos2)
-        screen.blit(score_text1, score_pos1)
+        _screen.blit(score_text2, score_pos2)
+        _screen.blit(score_text1, score_pos1)
 
-        pacman.draw(screen, BLOCK_W, BLOCK_H)
+        pacman.draw(_screen, BLOCK_W, BLOCK_H)
         for i in range(0, 4):
-            ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
+            ghosts[i].draw(_screen, BLOCK_W, BLOCK_H)
 
         # Render FPS text
         fps = int(clock.get_fps())
         fps_text = sys_font.render(f"FPS: {fps}", True, (255, 255, 255))  # White color
-        screen.blit(fps_text, (SCREEN_WIDTH - 100, SCREEN_HEIGHT - font_size))
+        _screen.blit(fps_text, (SCREEN_WIDTH - 100, SCREEN_HEIGHT - font_size))
 
 
-class GameManage():
+class GameManager():
     def __init__(self):
         self.current_state = StartScreen()
         self.running = True

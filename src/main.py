@@ -1,7 +1,6 @@
 from gamestate import *
 
-
-game_manage = GameManage()
+game_manage = GameManager()
 game_manage.run()
 
 pygame.quit()
