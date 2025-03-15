@@ -12,6 +12,7 @@ class GhostState(Enum):
     TARGETED = 3 # Rush toward pacman, targeted hunting
     RUN_AWAY = 4 # Run away from pacman
 
+# Parent class for 4 ghosts
 class Ghost(Characters):
     state = GhostState.IDLE
     algo_id = -1 # algorithm id for the ghost
@@ -20,7 +21,7 @@ class Ghost(Characters):
     algo_path = [] # Current path to reach pacman
     algo_upd_cnt = -1 # Iterator of the array algo_path[]
     algo_upd_limit = 0 # Limit of the iterator
-    pacman_prev_pos = [-1, -1] # Keep track of pacman's previous position
+    pacman_pre_upd = [-1, -1]
 
     # Ghost constructor
     def __init__(self, _pos, _id, _algo_id):
@@ -33,7 +34,6 @@ class Ghost(Characters):
         self.algo_path = []
         self.algo_upd_limit = -1
         self.algo_upd_cnt = -1
-        self.pacman_changing = 0
         self.pacman_pre_upd = [-1, -1]
 
     # Move toward successor - only 1 block move
@@ -51,13 +51,14 @@ class Ghost(Characters):
 
     # Update the new path for ghost
     def update_path(self, _map, ghosts_pos, pacman_pos, succ_list):
-        self.pacman_pre_upd = pacman_pos
+        self.pacman_pre_upd = [int(pacman_pos[0]), int(pacman_pos[1])]
         self.algo_path = Search.get_path(self.algo_id, _map, ghosts_pos, self.id, pacman_pos, succ_list)
         self.algo_upd_cnt = 0
         self.algo_upd_limit = len(self.algo_path) - 1
 
+    # Check if pacman far enough to re-update new path for ghosts
     def pacman_far_enough(self, pacman_pos):
-        if self.pacman_pre_upd != [-1, -1] and abs(pacman_pos[0] - self.pacman_pre_upd[0]) + abs(pacman_pos[1] - self.pacman_pre_upd[1]) == 5:
+        if self.pacman_pre_upd != [-1, -1] and abs(pacman_pos[0] - self.pacman_pre_upd[0]) + abs(pacman_pos[1] - self.pacman_pre_upd[1]) >= 6:
             return True
         return False
 
@@ -66,17 +67,14 @@ class Ghost(Characters):
         # Only get new successor if the ghost is inside the block
         if self.pos[0] % 1.0 == 0 and self.pos[1] % 1.0 == 0:
             # Can update new path if pacman is inside block
-            if self.algo_upd_cnt == -1 or self.algo_upd_cnt == self.algo_upd_limit or self.pacman_far_enough(pacman_pos):
+            if self.algo_upd_cnt == -1 or self.algo_upd_cnt == self.algo_upd_limit or (self.id != 1 and self.pacman_far_enough(pacman_pos)):
                 if pacman_pos[0] % 1.0 == 0 and pacman_pos[1] % 1.0 == 0:
-                    # print("Update path")
                     self.update_path(_map, ghosts_pos, pacman_pos, succ_list)
                     return self.algo_path[self.algo_upd_cnt]
             elif self.algo_upd_cnt < self.algo_upd_limit:
                 self.algo_upd_cnt += 1
-                # print("Next succ without update new path")
                 if in_succ_list(succ_list, self.id, self.algo_path[self.algo_upd_cnt]):
                     self.update_path(_map, ghosts_pos, pacman_pos, succ_list)
-                    # print("Reupdate new path")
                 return self.algo_path[self.algo_upd_cnt]
         # If not able to find next successor, return current successor to move or wait
         return self.successor

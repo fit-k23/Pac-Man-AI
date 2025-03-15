@@ -40,11 +40,12 @@ def bfs(mp, ghosts_pos, id, pacman_pos, succ_list):
             if new_pos == pacman_pos:
                 found = True
                 break
-
+    
+    # If can't reach, return current position to force ghost to wait
     if not found:
         return [start]
     
-    # Trace back to find path
+    # Trace back to find the path
     succ = []
     temp = [int(pacman_pos[0]), int(pacman_pos[1])]
     path = []

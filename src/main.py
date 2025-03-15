@@ -19,7 +19,6 @@ def get_file_absolute_path(file_path):
     return os.path.abspath(str(os.path.join(run_path, file_path)))
 
 # Map object
-# maze = Map.parse("../asset/maps/map_02.txt")
 maze = Map.parse(get_file_absolute_path("../asset/maps/map_02.txt"))
 
 # Get position of pacman, ghosts, and food at first
@@ -58,7 +57,6 @@ def display_game():
     # Draw map
     # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
     maze.draw_map(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
-    # maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 
     # Draw map border
     pygame.draw.rect(screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2, 8)
@@ -79,17 +77,16 @@ def display_game():
     screen.blit(bb, (30 * BLOCK_W + 5, 12 * BLOCK_H - 8))
     
     # Draw characters
+    for i in range(0, 4):
+        ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
+    pacman.draw(screen, BLOCK_W, BLOCK_H)
+
+    # Draw score    
     score_text1 = bigfont.render(str(pacman.score).zfill(3), False, WHITE)
     score_text2 = bigfont.render(str(pacman.score).zfill(3), False, blue_light)
     
     screen.blit(score_text2, score_pos2)
     screen.blit(score_text1, score_pos1)
-    
-    pacman.draw(screen, BLOCK_W, BLOCK_H)
-    for i in range(0, 4):
-        ghosts[i].draw(screen, BLOCK_W, BLOCK_H)
-    
-    
     
 def display_final_game():
     running_final_game = True
