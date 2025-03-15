@@ -85,6 +85,11 @@ class Map:
                         center_pos = (x + block_width / 2, y + block_height / 2)
                         radius = block_width / 4
                         pygame.draw.circle(screen, YELLOW, center_pos, radius)
+                    case '9':
+                        start_pos = (x, y + block_height / 2)
+                        end_pos = (x + block_width, y + block_height / 2)
+                        pygame.draw.line(screen, YELLOW, start_pos, end_pos, 2)
+
 
 
     def draw_food(self, screen, block_width, block_height, food_pos):
