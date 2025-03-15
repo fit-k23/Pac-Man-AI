@@ -4,7 +4,7 @@ from util import *
 # This is a parent class of pacman and ghosts.
 # The move function of pacman and ghosts are different so it is defined in child class.
 class Characters:
-    pos = [0, 0] # positon on grid (array type []), use (x, y) coordinates in pygame
+    pos = [0, 0] # position on grid (array type []), use (x, y) coordinates in pygame
     prev_pos = [-1, -1] # previous position of character (-1 indicates character has not moved)
     dir = -1 # current moving direction
     delay = 0 # delay for slow movement
@@ -22,7 +22,7 @@ class Characters:
         self.textures = []
         self.__texture_index = -1
         self.__last_update = pygame.time.get_ticks()
-        self.__animation_speed = 50 
+        self.__animation_speed = 50
         
     def get_texture_index(self):
         return self.__texture_index 

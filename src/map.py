@@ -1,10 +1,7 @@
-from unittest import case
-
 import pygame
 import math
 from defs import *
 
-# THICKNESS
 THICKNESS = 4
 
 class Map:
@@ -58,44 +55,45 @@ class Map:
             for j in range(len(self.data[i])):
                 x = j * block_width
                 y = i * block_height
-                # 5, 6, 7, 8: arc
-                if self.data[i][j] == '5':
-                    rect = pygame.Rect(x - block_width / 2 + off_x, y + block_height / 2 - off_y, block_width + off_block, block_height + off_block)
-                    pygame.draw.arc(screen, BLUE, rect, math.radians(0), math.radians(90), THICKNESS)
-                elif self.data[i][j] == '6':
-                    rect = pygame.Rect(x + block_width / 2 - off_x, y + block_height / 2 - off_y, block_width + off_block, block_height + off_block)
-                    pygame.draw.arc(screen, BLUE, rect, math.radians(90), math.radians(180), THICKNESS)
-                elif self.data[i][j] == '7':
-                    rect = pygame.Rect(x + block_width / 2 - off_x, y - block_height / 2 + off_y, block_width + off_block, block_height + off_block)
-                    pygame.draw.arc(screen, BLUE, rect, math.radians(180), math.radians(270), THICKNESS)
-                elif self.data[i][j] == '8':
-                    rect = pygame.Rect(x - block_width / 2 + off_x, y - block_height / 2 + off_y, block_width + off_block, block_height + off_block)
-                    pygame.draw.arc(screen, BLUE, rect, math.radians(270), math.radians(360), THICKNESS)
-                # 3, 4: straight line
-                elif self.data[i][j] == '3':
-                    start_pos = (x + block_width / 2, y)
-                    end_pos = (x + block_width / 2, y + block_height)
-                    pygame.draw.line(screen, BLUE, start_pos, end_pos, THICKNESS)
-                elif self.data[i][j] == '4':
-                    start_pos = (x, y + block_height / 2)
-                    end_pos = (x + block_width, y + block_height / 2)
-                    pygame.draw.line(screen, BLUE, start_pos, end_pos, THICKNESS)
-                # 0: food
-                elif self.data[i][j] == '1':
-                    x = j * block_width
-                    y = i * block_height
-                    centerPos = (x + block_width / 2, y + block_height / 2)
-                    radius = block_width / 4
-                    pygame.draw.circle(screen, YELLOW, centerPos, radius)
+                match self.data[i][j]:
+                    # 5, 6, 7, 8: arc
+                    case '5':
+                        rect = pygame.Rect(x - block_width / 2 + off_x, y + block_height / 2 - off_y, block_width + off_block, block_height + off_block)
+                        pygame.draw.arc(screen, BLUE, rect, math.radians(0), math.radians(90), THICKNESS)
+                    case '6':
+                        rect = pygame.Rect(x + block_width / 2 - off_x, y + block_height / 2 - off_y, block_width + off_block, block_height + off_block)
+                        pygame.draw.arc(screen, BLUE, rect, math.radians(90), math.radians(180), THICKNESS)
+                    case '7':
+                        rect = pygame.Rect(x + block_width / 2 - off_x, y - block_height / 2 + off_y, block_width + off_block, block_height + off_block)
+                        pygame.draw.arc(screen, BLUE, rect, math.radians(180), math.radians(270), THICKNESS)
+                    case '8':
+                        rect = pygame.Rect(x - block_width / 2 + off_x, y - block_height / 2 + off_y, block_width + off_block, block_height + off_block)
+                        pygame.draw.arc(screen, BLUE, rect, math.radians(270), math.radians(360), THICKNESS)
+                    # 3, 4: straight line
+                    case '3':
+                        start_pos = (x + block_width / 2, y)
+                        end_pos = (x + block_width / 2, y + block_height)
+                        pygame.draw.line(screen, BLUE, start_pos, end_pos, THICKNESS)
+                    case '4':
+                        start_pos = (x, y + block_height / 2)
+                        end_pos = (x + block_width, y + block_height / 2)
+                        pygame.draw.line(screen, BLUE, start_pos, end_pos, THICKNESS)
+                    # 1: food
+                    case '1':
+                        x = j * block_width
+                        y = i * block_height
+                        center_pos = (x + block_width / 2, y + block_height / 2)
+                        radius = block_width / 4
+                        pygame.draw.circle(screen, YELLOW, center_pos, radius)
 
 
     def draw_food(self, screen, block_width, block_height, food_pos):
         for (col, row) in food_pos:
             x = row * block_width
             y = col * block_height
-            centerPos = (x + block_width / 2, y + block_height / 2)
+            center_pos = (x + block_width / 2, y + block_height / 2)
             radius = block_width / 4
-            pygame.draw.circle(screen, YELLOW, centerPos, radius)
+            pygame.draw.circle(screen, YELLOW, center_pos, radius)
 
     def erase_food(self, food_pos, x, y):
         if self.data[int(x)][int(y)] == '1':

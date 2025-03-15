@@ -42,11 +42,11 @@ ghosts[3].load_textures([get_file_absolute_path("../asset/ghost/2.png")])
 # Text
 last_score = -1
 font_path = os.path.abspath(get_file_absolute_path("../asset/font/8-BIT WONDER.TTF"))
-smallfont = pygame.font.Font(font_path, 35)
-bigfont = pygame.font.Font(font_path, 60)
+small_font = pygame.font.Font(font_path, 35)
+big_font = pygame.font.Font(font_path, 60)
 
 Sys_font = pygame.font.SysFont(None, 35)
-score_text = smallfont.render('Score: ' + str(pacman.score), False, WHITE)
+score_text = small_font.render('Score: ' + str(pacman.score), False, WHITE)
 score_pos1 = (32 * BLOCK_W - 3, 6 * BLOCK_H)
 score_pos2 = (32 * BLOCK_W - 8, 6 * BLOCK_H + 5)
 
@@ -82,8 +82,8 @@ def display_game():
     pacman.draw(screen, BLOCK_W, BLOCK_H)
 
     # Draw score    
-    score_text1 = bigfont.render(str(pacman.score).zfill(3), False, WHITE)
-    score_text2 = bigfont.render(str(pacman.score).zfill(3), False, blue_light)
+    score_text1 = big_font.render(str(pacman.score).zfill(3), True, WHITE)
+    score_text2 = big_font.render(str(pacman.score).zfill(3), True, BLUE_LIGHT)
     
     screen.blit(score_text2, score_pos2)
     screen.blit(score_text1, score_pos1)
@@ -106,11 +106,11 @@ def display_final_game():
         
         if button_x <= mouse[0] <= button_x + BUTTON_W and button_y <= mouse[1] <= button_y + BUTTON_H: 
             rect = pygame.Rect(button_x, button_y, BUTTON_W, BUTTON_H)
-            pygame.draw.rect(screen, blue_light, rect, border_radius = 20)
+            pygame.draw.rect(screen, BLUE_LIGHT, rect, border_radius = 20)
             pygame.draw.rect(screen, color_dark, rect, 3, 20)
         else:
             rect = pygame.Rect(button_x, button_y, BUTTON_W, BUTTON_H)
-            pygame.draw.rect(screen, color_light, rect, border_radius = 20)
+            pygame.draw.rect(screen, RASPBERRY_PINK, rect, border_radius = 20)
             pygame.draw.rect(screen, color_dark, rect, 3, 20)
         
         screen.blit(text, (BLOCK_W * (GRID_W / 2 - 1.1), BLOCK_H * (GRID_H / 2 + 10.7)))
@@ -142,19 +142,19 @@ def show_start_menu():
         mouse = pygame.mouse.get_pos()
         screen.blit(menu_image, (0, 0))
         if button_rect.x <= mouse[0] <= button_rect.x + 200 and button_rect.y <= mouse[1] <= button_rect.y+60:
-            pygame.draw.rect(screen, blue_light, button_rect, border_radius=10)
+            pygame.draw.rect(screen, BLUE_LIGHT, button_rect, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
             screen.blit(button_text, (button_rect.x + 70, button_rect.y + 15))
         else:
-            pygame.draw.rect(screen, color_light, button_rect, border_radius=10)
+            pygame.draw.rect(screen, RASPBERRY_PINK, button_rect, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
             screen.blit(button_text, (button_rect.x + 70, button_rect.y + 15))
         if button_rect2.x <= mouse[0] <= button_rect2.x + 200 and button_rect2.y <= mouse[1] <= button_rect2.y+60:
-            pygame.draw.rect(screen, blue_light, button_rect2, border_radius=10)
+            pygame.draw.rect(screen, BLUE_LIGHT, button_rect2, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect, 3, 10)
             screen.blit(button_text2, (button_rect2.x + 72, button_rect2.y + 15))
         else:
-            pygame.draw.rect(screen, color_light, button_rect2, border_radius=10)
+            pygame.draw.rect(screen, RASPBERRY_PINK, button_rect2, border_radius=10)
             pygame.draw.rect(screen, color_dark, button_rect2, 3, 10)
             screen.blit(button_text2, (button_rect2.x + 72, button_rect2.y + 15))
 
@@ -163,12 +163,11 @@ def show_start_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                exit()
+                exit(1)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_rect2.collidepoint(event.pos):
                     pygame.quit()
                     exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_rect.collidepoint(event.pos):
                     running = False 
 
@@ -249,7 +248,7 @@ while running:
 
     # flip() the display to put your work on screen
     pygame.display.flip()
-    clock.tick(70)
+    clock.tick(60)
     
 pygame.quit()
 

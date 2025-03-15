@@ -8,10 +8,10 @@ YELLOW = (255, 255, 0)
 MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 PURPLE = (255, 0, 255)
-color_light = (227,80,168)  
+RASPBERRY_PINK = (227,80,168)
 color_dark = (149,67,167)
 blue_dark = (106,156,253)
-blue_light = (0,255,255)
+BLUE_LIGHT = (0,255,255)
 
 # Screen, Block parameters
 GRID_W: int = 40
