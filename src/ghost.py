@@ -89,7 +89,7 @@ class Ghost(Characters):
     # Check if eat pacman
     @staticmethod
     def eat_pacman(ghosts_pos, pacman_pos):
-        eps = 0.6
+        eps = 0.7
         for i in range(4):
             if math.fabs(ghosts_pos[i][0] - pacman_pos[0]) <= eps and math.fabs(ghosts_pos[i][1] - pacman_pos[1]) <= eps:
                 return True
