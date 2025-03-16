@@ -160,12 +160,13 @@ def update_character():
     for i in range(4):
         if ghosts[i].delay == delay_to_update:
             # print("Turn", i, "cur pos", ghosts[i].pos, "limit", ghosts[i].algo_upd_limit)
+            # print("succ_list", succ_list)
             ghosts[i].move(maze, ghosts_pos, succ_list, pacman.pos)
             ghosts[i].delay = 0
             succ_list[i] = ghosts[i].successor
             # print("Ghost", i, "pos", ghosts[i].pos, "cnt", ghosts[i].algo_upd_cnt, "\npath", ghosts[i].algo_path)
             # print("Next successor is ", succ_list[i])
-
+            # print()
 
 class GameScreen(GameState):
     def handle_event(self, game_manage):
@@ -202,10 +203,10 @@ class GameScreen(GameState):
 
     def draw(self, _screen):
         _screen.fill("black")
-        # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
         # Draw map
+        # maze.draw_grid(screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
         maze.draw_map(_screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_W, BLOCK_H)
-        # maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
+        maze.draw_food(screen, BLOCK_W, BLOCK_H, food_pos)
 
         # Draw map border
         pygame.draw.rect(_screen, PURPLE, pygame.Rect(0, 0, 30 * BLOCK_W + 2, 32 * BLOCK_H + 20), 2, 8)
@@ -256,4 +257,4 @@ class GameManager():
             self.current_state.update(self)
             self.current_state.draw(screen)
             pygame.display.flip()
-            clock.tick(60)
+            clock.tick(70)

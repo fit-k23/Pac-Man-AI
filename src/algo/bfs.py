@@ -3,7 +3,7 @@ from map import Map
 from util import *
 from defs import *
 from collections import deque
-import random
+import time
 
 def bfs(mp, ghosts_pos, id, pacman_pos, succ_list):
     # Initialize queue, visited, and trace array
@@ -20,9 +20,14 @@ def bfs(mp, ghosts_pos, id, pacman_pos, succ_list):
     visited[int(start[0])][int(start[1])] = True
 
     found = False
+
+    # Statistics
+    start_time = time.time()
+    expanded_node = 0
+
     while len(queue) > 0 and found == False:
         cur_pos = queue.popleft()
-
+        expanded_node += 1
         if cur_pos == pacman_pos:
             found = True
             break
@@ -40,7 +45,7 @@ def bfs(mp, ghosts_pos, id, pacman_pos, succ_list):
             if new_pos == pacman_pos:
                 found = True
                 break
-    
+    end_time = time.time()
     # If can't reach, return current position to force ghost to wait
     if not found:
         return [start]
@@ -62,5 +67,7 @@ def bfs(mp, ghosts_pos, id, pacman_pos, succ_list):
 
     if path == []:
         path = [start]
-
+    elapsed = end_time - start_time
+    print(f'Time taken BFS: {elapsed:.12f} seconds')
+    print(f'Expanded node BFS:', expanded_node)
     return path

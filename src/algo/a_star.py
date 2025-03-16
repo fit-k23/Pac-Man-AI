@@ -1,6 +1,7 @@
 from queue import PriorityQueue
 from util import *
 from defs import *
+import time
 
 def astar(mp, ghosts_pos, id, pacman_pos, succ_list):
     # Initialize priority queue, dist array, and trace array
@@ -25,17 +26,24 @@ def astar(mp, ghosts_pos, id, pacman_pos, succ_list):
     dist[int(ghosts_pos[id][0])][int(ghosts_pos[id][1])] = get_heuristic(ghosts_pos[id], pacman_pos)
 
     found = False
+
+    # Statistics
+    start_time = time.time()
+    expanded_node = 0
+
     while pq.qsize() > 0: 
         cur = pq.get()
-
+        
+        # Get rid of redundant path
+        if cur[0] != dist[cur[2][0]][cur[2][1]]:
+            continue
+        
+        expanded_node += 1
         # Expand goal position -> finish
         if cur[2] == pacman_pos:
             found = True
             break
         
-        # Get rid of redundant path
-        if cur[0] != dist[cur[2][0]][cur[2][1]]:
-            continue
         
         for i in range(4):
             new_pos = [cur[2][0] + dx[i], cur[2][1] + dy[i]]
@@ -57,6 +65,8 @@ def astar(mp, ghosts_pos, id, pacman_pos, succ_list):
                 dist[new_pos[0]][new_pos[1]] = new_dist + h
                 trace[new_pos[0]][new_pos[1]] = cur[2]
     
+    end_time = time.time()
+
     # If can't reach, return current position to force ghost to wait
     if not found:
         # print("A* cannot found destination")
@@ -81,4 +91,7 @@ def astar(mp, ghosts_pos, id, pacman_pos, succ_list):
     if path == []:
         path = [start]
 
+    elapsed = end_time - start_time
+    print(f'Time taken A*: {elapsed:.12f} seconds')
+    print(f'Expanded node A*:', expanded_node)
     return path

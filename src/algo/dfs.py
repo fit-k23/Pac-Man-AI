@@ -1,6 +1,6 @@
 from map import Map
 from util import *
-# import time
+import time
 
 def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], succ_list) -> list[list[int]]:
     # elapsed_time = -time.time()
@@ -21,20 +21,26 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], su
     _move_set_x = [0, 0, -1, 1]
     _move_set_y = [-1, 1, 0, 0]
 
+    # Statistics
+    start_time = time.time()
+    expanded_node = 0
+
     while frontier and not found:
         current = frontier.pop()
+        expanded_node += 1
+        # print("pos", current)
         for i in range(4):
-            _mx = current[0] + _move_set_x[i]
-            _my = current[1] + _move_set_y[i]
+            _mx = current[0] + _move_set_x[3 - i]
+            _my = current[1] + _move_set_y[3 - i]
             if can_go([_mx, _my], mp) == False or visited[_mx][_my] != None or (current == start and in_succ_list(succ_list, id, [_mx, _my])):
                 continue
-
+            # print("succ=",[_mx,_my])
             frontier.append([_mx, _my])
             visited[_mx][_my] = current
             if pacman_pos[0] == _mx and pacman_pos[1] == _my:
                 found = True
                 break
-
+    end_time = time.time()
     # If goal cannot be reach, return current position to force ghost to wait
     if not found:
         # print("ERROR: destination node is unreachable")
@@ -55,8 +61,8 @@ def dfs(mp: Map, ghosts_pos: list[list[int]], id: int, pacman_pos: list[int], su
 
     if not trace_path:
         return [start]
-
-    # elapsed_time += time.time()
-
-    # print(f'DFS time taken: {elapsed_time:.12f} seconds')
+    # print('Path:', trace_path)
+    elapsed = end_time - start_time
+    # print(f'Time taken DFS: {elapsed:.12f} seconds')
+    # print(f'Expanded node:', expanded_node)
     return trace_path

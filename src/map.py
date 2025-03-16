@@ -78,18 +78,10 @@ class Map:
                         start_pos = (x, y + block_height / 2)
                         end_pos = (x + block_width, y + block_height / 2)
                         pygame.draw.line(screen, BLUE, start_pos, end_pos, THICKNESS)
-                    # 1: food
-                    case '1':
-                        x = j * block_width
-                        y = i * block_height
-                        center_pos = (x + block_width / 2, y + block_height / 2)
-                        radius = block_width / 4
-                        pygame.draw.circle(screen, YELLOW, center_pos, radius)
                     case '9':
                         start_pos = (x, y + block_height / 2)
                         end_pos = (x + block_width, y + block_height / 2)
                         pygame.draw.line(screen, YELLOW, start_pos, end_pos, 2)
-
 
 
     def draw_food(self, screen, block_width, block_height, food_pos):
@@ -101,8 +93,8 @@ class Map:
             pygame.draw.circle(screen, YELLOW, center_pos, radius)
 
     def erase_food(self, food_pos, x, y):
-        if self.data[int(x)][int(y)] == '1':
-            self.data[int(x)][int(y)] = '0'
+        if (x, y) in food_pos:
+            food_pos.remove((x, y))
             return True
         return False
 

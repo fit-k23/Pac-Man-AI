@@ -20,9 +20,17 @@ class Search:
     def get_path(algo_id, _map: Map, ghosts_pos, id: int, pacman_pos, succ_list):
         match algo_id:
             case 0:
-                return bfs(_map, ghosts_pos, id, pacman_pos, succ_list)
+                tracemalloc.start()
+                path = bfs(_map, ghosts_pos, id, pacman_pos, succ_list)
+                print('BFS memory usage: ', tracemalloc.get_traced_memory())
+                tracemalloc.stop()
+                return path
             case 1:
-                return dfs(_map, ghosts_pos, id, pacman_pos, succ_list)
+                tracemalloc.start()
+                path = dfs(_map, ghosts_pos, id, pacman_pos, succ_list)
+                print('DFS memory usage: ', tracemalloc.get_traced_memory())
+                tracemalloc.stop()
+                return path
             case 2:
                 tracemalloc.start()
                 path = ucs(_map, ghosts_pos, id, pacman_pos, succ_list)
@@ -30,4 +38,8 @@ class Search:
                 tracemalloc.stop()
                 return path
             case 3:
-                return astar(_map, ghosts_pos, id, pacman_pos, succ_list)
+                tracemalloc.start()
+                path = astar(_map, ghosts_pos, id, pacman_pos, succ_list)
+                print('A* memory usage: ', tracemalloc.get_traced_memory())
+                tracemalloc.stop()
+                return path

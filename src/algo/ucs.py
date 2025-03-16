@@ -25,7 +25,10 @@ def ucs(mp, ghosts_pos, id, pacman_pos, succ_list):
     dist[int(ghosts_pos[id][0])][int(ghosts_pos[id][1])] = 0
 
     found = False
+
+    # Statistics
     start_time = time.time()
+    expanded_node = 0
 
     while pq.qsize() > 0:
         (cur_dist, cur_pos) = pq.get()
@@ -33,7 +36,8 @@ def ucs(mp, ghosts_pos, id, pacman_pos, succ_list):
         # Get rid of redundant path
         if cur_dist != dist[cur_pos[0]][cur_pos[1]]:
             continue
-
+        
+        expanded_node += 1
         # Expand goal position -> finish
         if cur_pos == pacman_pos:
             found = True
@@ -79,5 +83,6 @@ def ucs(mp, ghosts_pos, id, pacman_pos, succ_list):
         path = [start]
     
     elapsed = end_time - start_time
-    print(f'Time taken: {elapsed:.12f} seconds')
+    print(f'Time taken UCS: {elapsed:.12f} seconds')
+    print(f'Expanded node UCS:', expanded_node)
     return path
